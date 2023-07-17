@@ -3,7 +3,7 @@ import Container from "./layout/container";
 import Section from "./layout/section";
 import { BsArrowRight } from 'react-icons/bs';
 
-function Breadcrumb({title}, {title: string}) {
+function Breadcrumb({title} : {title: string}) {
     return (
         <Section className="py-28 bg-[#f3f8f7]">
             <Container className="flex justify-between items-center">
