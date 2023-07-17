@@ -69,7 +69,7 @@ function Header() {
                     <ul className="flex justify-center font-medium w-full">
                         <li className="hover:text-primary duration-150 cursor-pointer mx-5">Home</li>
                         <li className="hover:text-primary duration-150 cursor-pointer mx-5">About</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Shop</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/shop">Shop</Link></li>
                         <li className="hover:text-primary duration-150 cursor-pointer mx-5">Blog</li>
                         <li className="hover:text-primary duration-150 cursor-pointer mx-5">Contact</li>
                     </ul>

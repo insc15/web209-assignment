@@ -26,10 +26,10 @@ export default function CategorySelector() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute mt-2 w-full px-1 py-1 divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none">
+        <Menu.Items className="absolute mt-2 w-full px-1 py-1 divide-y divide-gray-100 rounded-md bg-white shadow-lg focus:outline-none z-10">
           {
-            links.map((link) => (
-                <Menu.Item>
+            links.map((link, index) => (
+                <Menu.Item key={index}>
                     <NavLink to={link.href} className={({ isActive }) => `${ isActive ? "bg-violet-500 text-white" : "text-gray-900 hover:bg-primary hover:text-white"} group duration-150 flex w-full items-center rounded-md px-2 py-2 text-sm`}>
                         {link.label}
                     </NavLink>
