@@ -8,8 +8,13 @@ import c from "../access/image/c.png"
 import d from "../access/image/apps.png"
 import e from "../access/image/7857224.png"
 import f from "../access/image/3914565.png"
+import { useState } from "react"
+import g from "../access/image/settings.png"
+import h from "../access/image/power.png"
 
 const AdminLayout = () => {
+    const [toggle, setToggle] = useState(false)
+
     return (
         <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
             <div style={{ width: 200, height: "100vh", backgroundColor: "rgba(208, 224, 199, 0.5)" }}>
@@ -38,10 +43,17 @@ const AdminLayout = () => {
                             <button style={{ margin: "0px 5px" }}><img style={{ width: 15 }} src={c} alt="" /></button>
                         </div>
                         <img style={{ width: 25 }} src={b} alt="" />
-                        <img style={{ width: 35 }} src={user} alt="" />
+                        <div onClick={() => setToggle(prev => !prev)} style={{ position: "relative" }}>
+                            <img style={{ width: 35 }} src={user} alt="" />
+                            {toggle && (
+                                <div style={{ position: "absolute", backgroundColor: "white", width: "112px", padding: "8px 0px", margin: "8px 0px", right: "0", textAlign: "center" }}>
+                                    <button className={styles['btn']} style={{ padding: "8px", width: "100%", display: "flex", gap: "10px" }}><img style={{ width: 20 }} src={g} alt="" />Setting</button>
+                                    <button className={styles['btn']} style={{ padding: "8px", width: "100%", display: "flex", gap: "10px" }}><img style={{ width: 20 }} src={h} alt="" />Logout</button>
+                                </div>
+                            )}
+
+                        </div>
                     </div>
-
-
                 </header>
                 <Outlet></Outlet>
             </div>
