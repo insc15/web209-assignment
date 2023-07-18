@@ -1,5 +1,5 @@
 export default interface IProduct{
-    id: string | number;
+    id?: string | number;
     name: string;
     author: string;
     price: number;
