@@ -37,21 +37,23 @@ export function AdminLayout() {
 
   return (
     <div className="flex min-h-screen w-full">
-      <div className="w-64 h-screen shadow-xl">
-        <div className="h-20 p-3">
-          <Link to={'/'}>
-            <img className="w-full object-contain h-full" src={logo} alt=""/>
-          </Link>
-        </div>
-        <div className="p-4 space-y-4">
-          {
-            nav.map((item, index) => (
-              <NavLink end={item.name == "Dashboard"} key={index} className={({isActive}) => `flex w-full py-2.5 px-5 text-center rounded-md items-center gap-2 duration-150 ${isActive ? 'bg-primary text-white shadow' : 'hover:bg-primary hover:text-white'}`} to={item.path}>
-                {item.icon}
-                <span>{item.name}</span>
-              </NavLink>
-            ))
-          }
+      <div className="w-64 min-h-screen relative shadow-xl">
+        <div className="sticky top-0">
+          <div className="h-20 p-3">
+            <Link to={'/'}>
+              <img className="w-full object-contain h-full" src={logo} alt=""/>
+            </Link>
+          </div>
+          <div className="p-4 space-y-4">
+            {
+              nav.map((item, index) => (
+                <NavLink end={item.name == "Dashboard"} key={index} className={({isActive}) => `flex w-full py-2.5 px-5 text-center rounded-md items-center gap-2 duration-150 ${isActive ? 'bg-primary text-white shadow' : 'hover:bg-primary hover:text-white'}`} to={item.path}>
+                  {item.icon}
+                  <span>{item.name}</span>
+                </NavLink>
+              ))
+            }
+          </div>
         </div>
       </div>
       <div className="flex-1 bg-gray-100">

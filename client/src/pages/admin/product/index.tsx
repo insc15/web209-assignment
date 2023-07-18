@@ -19,7 +19,7 @@ function PageAdminProducts() {
                 </Link>
             </div>
             <div className="shadow p-3 bg-white">
-            
+                
             </div>
         </Section>
     );
