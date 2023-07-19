@@ -2,11 +2,12 @@ import Breadcrumb from "../components/breadcrumb";
 import Container from "../components/layout/container";
 import Section from "../components/layout/section";
 import ListProducts from "../components/listProducts";
-import products from "./db";
 import { FiSliders } from "react-icons/fi";
 import { BsChevronDown } from "react-icons/bs";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import IProduct from "@/interfaces/product";
+import { getProducts } from "@/services/product";
 
 function Sorting({ sortOtps = [], current, setFilter = () => {return;} } : { sortOtps: {label: string, value: string}[], current?: string, setFilter: React.Dispatch<React.SetStateAction<string>>}) {
   return (
@@ -75,6 +76,7 @@ function Show({ showOtps = [], current, setFilter = () => {return;} } : { showOt
 function PageShop() {
   const [showFilter, setShowFilter] = useState<string>('20');
   const [sort, setSort] = useState<string>('default');
+  const [products, setProducts] = useState<IProduct[]>([])
 
   const sortOtps : {label: string, value: string}[] = [
     { label: "Default Sorting", value: "default" },
@@ -87,6 +89,14 @@ function PageShop() {
     { label: "30", value: "30" },
     { label: "40", value: "40" },
   ]
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data: products } = await getProducts();
+      setProducts(products);
+    };
+    void fetchProducts();
+  }, []);
 
   return (
     <>

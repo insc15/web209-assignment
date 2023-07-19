@@ -9,7 +9,7 @@ export default {
       fontFamily: {
         sans: ["Poppins", "sans-serif"],
       },
-      colors:{
+      colors: {
         primary: "#0b7c6b",
         "button-hover": "#085752"
       }

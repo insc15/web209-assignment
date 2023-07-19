@@ -12,7 +12,7 @@ export const getAll = async (req, res) => {
     const category = await Category.find();
     if (category.length === 0) {
       return res.json({
-        message: 'Không có sản phẩm nào',
+        message: 'Không có danh mục nào',
       });
     }
     return res.json(category);
@@ -28,7 +28,7 @@ export const get = async function (req, res) {
     const category = await Category.findById(req.params.id);
     if (!category) {
       return res.json({
-        message: 'Không có sản phẩm nào',
+        message: 'Không có danh mục nào',
       });
     }
     const products = await Product.find({ categoryId: req.params.id });
@@ -51,11 +51,11 @@ export const create = async function (req, res) {
     const category = await Category.create(req.body);
     if (!category) {
       return res.json({
-        message: 'Không thêm sản phẩm',
+        message: 'Không thêm danh mục',
       });
     }
     return res.json({
-      message: 'Thêm sản phẩm thành công',
+      message: 'Thêm danh mục thành công',
       category,
     });
   } catch (error) {
@@ -71,11 +71,11 @@ export const update = async function (req, res) {
     });
     if (!category) {
       return res.status(400).json({
-        message: 'Cập nhật sản phẩm không thành công',
+        message: 'Cập nhật danh mục không thành công',
       });
     }
     return res.status(200).json({
-      message: 'Cập nhật sản phẩm thành công',
+      message: 'Cập nhật danh mục thành công',
       category,
     });
   } catch (error) {
@@ -88,7 +88,7 @@ export const remove = async function (req, res) {
   try {
     const category = await Category.findByIdAndDelete(req.params.id);
     return res.json({
-      message: 'Xóa sản phẩm thành công',
+      message: 'Xóa danh mục thành công',
       category,
     });
   } catch (error) {

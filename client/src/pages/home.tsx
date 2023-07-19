@@ -3,9 +3,22 @@ import Container from '../components/layout/container';
 import Section from '../components/layout/section';
 import { BsChevronRight } from 'react-icons/bs';
 import ListProducts from '../components/listProducts';
-import products from './db';
+import { useEffect, useState } from 'react';
+import { getProducts } from '@/services/product';
+import IProduct from '@/interfaces/product';
+// import products from './db';
 
 function PageHome() {
+    const [products, setProducts] = useState<IProduct[]>([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+          const { data: products } = await getProducts();
+          setProducts(products);
+        };
+        void fetchProducts();
+      }, []);
+
     return (
         <>
             <Section className='h-[500px]'>
