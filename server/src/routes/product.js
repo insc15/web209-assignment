@@ -8,7 +8,7 @@ const upload = multer()
 router.get("/products", getAll);
 router.get("/products/:id", get);
 router.post("/products", upload.single('image'), create);
-router.patch("/products/:id", update);
+router.patch("/products/:id", upload.single('image'), update);
 router.delete("/products/:id", remove);
 
 export default router;

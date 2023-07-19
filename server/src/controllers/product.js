@@ -107,6 +107,13 @@ export const create = async function (req, res) {
 };
 export const update = async function (req, res) {
   try {
+    if(req.file) {
+      const {secure_url} = await uploadStream(req.file);
+      req.body.image = secure_url;
+    } else {
+      const imagePath = await cloudinary.v2.uploader.upload(req.body.image);
+      req.body.image = imagePath.secure_url;
+    }
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });

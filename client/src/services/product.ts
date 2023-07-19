@@ -12,3 +12,11 @@ export function addProduct(product: FormData) {
 export function getProducts() {
     return instance.get<IProduct[]>('/products');
 }
+
+export function getProduct(id: number | string) {
+    return instance.get<IProduct>(`/products/${id}`);
+}
+
+export function updateProduct(id: number | string, product: FormData) {
+    return instance.patch(`/products/${id}`, product);
+}

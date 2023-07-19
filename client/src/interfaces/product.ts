@@ -1,11 +1,11 @@
 export default interface IProduct{
-    id?: string | number;
+    _id?: string | number;
     image: string | FileList;
     name: string;
     price: number;
     discount_price?: number;
     short_description?: string;
-    category_id: number;
+    categoryId: number;
     stock: number;
     author: string;
     description: string;
