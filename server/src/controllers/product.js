@@ -1,32 +1,36 @@
+import joi from "joi";
+import Product from "../models/product";
+import Category from "../models/category";
+import cloudinary from "cloudinary";
 
-import joi from 'joi';
-import Product from '../models/product';
-import Category from '../models/category';
-
+cloudinary.config({ 
+  cloud_name: 'dpudrx9vt', 
+  api_key: '261937952884313', 
+  api_secret: 'WRM16LpPW2QQL3xpMdm5pZ2AGGo' 
+});
 
 const productSchema = joi.object({
   name: joi.string().required(),
   price: joi.number().required(),
-  image: joi.string().required(),
-  desc: joi.string().required(),
+  description: joi.string().required(),
   categoryId: joi.string().required(),
   discount_price: joi.number().required(),
-  short_desc: joi.string().required().min(3),
+  short_description: joi.string().required(),
   stock: joi.number().required(),
   author: joi.string().required(),
   publisher: joi.string(),
   page_num: joi.number(),
   publishing_year: joi.string(),
-  language: joi.string()
+  language: joi.string(),
 });
 
 export const getAll = async (req, res) => {
   try {
     // const { data: products } = await axios.get(`${API_URI}/products`);
-    const products = await Product.find().populate('categoryId');
+    const products = await Product.find().populate("categoryId");
     if (products.length === 0) {
       return res.json({
-        message: 'Không có sản phẩm nào',
+        message: "Không có sản phẩm nào",
       });
     }
     return res.json(products);
@@ -40,11 +44,11 @@ export const get = async function (req, res) {
   try {
     // const { data: product } = await axios.get(`${API_URI}/products/${req.params.id}`);
     const product = await Product.findById(req.params.id).populate(
-      'categoryId'
+      "categoryId"
     );
     if (!product) {
       return res.json({
-        message: 'Không có sản phẩm nào',
+        message: "Không có sản phẩm nào",
       });
     }
     return res.json(product);
@@ -54,6 +58,21 @@ export const get = async function (req, res) {
     });
   }
 };
+
+async function uploadStream(file) {
+  return new Promise((resolve, reject) => {
+    cloudinary.v2.uploader.upload_stream({ resource_type: 'image' }, (err, res) => {
+      if (err) {
+        // console.log(err);
+        reject(err);
+      } else {
+        // console.log(res);
+        resolve(res);
+      }
+    }).end(file.buffer);
+  });
+}
+
 export const create = async function (req, res) {
   try {
     const { error } = productSchema.validate(req.body);
@@ -62,11 +81,13 @@ export const create = async function (req, res) {
         message: error.details[0].message,
       });
     }
+    const {secure_url} = await uploadStream(req.file);
+    req.body.image = secure_url;
     // const { data: product } = await axios.post(`${API_URI}/products`, req.body);
     const product = await Product.create(req.body);
     if (!product) {
       return res.json({
-        message: 'Không thêm sản phẩm',
+        message: "Không thêm được sản phẩm",
       });
     }
     await Category.findByIdAndUpdate(product.categoryId, {
@@ -75,7 +96,7 @@ export const create = async function (req, res) {
       },
     });
     return res.json({
-      message: 'Thêm sản phẩm thành công',
+      message: "Thêm sản phẩm thành công",
       data: product,
     });
   } catch (error) {
@@ -91,11 +112,11 @@ export const update = async function (req, res) {
     });
     if (!product) {
       return res.json({
-        message: 'Cập nhật sản phẩm không thành công',
+        message: "Cập nhật sản phẩm không thành công",
       });
     }
     return res.json({
-      message: 'Cập nhật sản phẩm thành công',
+      message: "Cập nhật sản phẩm thành công",
       data: product,
     });
   } catch (error) {
@@ -108,7 +129,7 @@ export const remove = async function (req, res) {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     return res.json({
-      message: 'Xóa sản phẩm thành công',
+      message: "Xóa sản phẩm thành công",
       product,
     });
   } catch (error) {

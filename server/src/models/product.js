@@ -11,10 +11,9 @@ const productSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    desc: {
+    description: {
       type: String,
       require: true,
-      minLength: 3,
     },
     image: {
       type: String,
@@ -27,9 +26,8 @@ const productSchema = new mongoose.Schema(
     discount_price: {
       type: Number,
     },
-    short_desc: {
+    short_description: {
       type: String,
-      minLength: 3,
     },
     stock: {
       type: Number,

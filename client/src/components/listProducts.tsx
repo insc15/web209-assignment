@@ -10,7 +10,7 @@ function ListProducts({products = [], limit = 5, type = "row"} : {products: IPro
                         <div className="w-1/5 p-3" key={index}>
                             <Link to={`/product/${product.id!}`} className="block shadow p-2 hover:shadow-lg duration-150 cursor-pointer">
                                 <div className="relative pt-[100%] overflow-hidden mb-4 rounded-2xl">
-                                    <img className="absolute top-0 mx-auto h-full right-0 left-0 bottom-0" src={product.image} alt={`${product.name} cover image`} />
+                                    <img className="absolute top-0 mx-auto h-full right-0 left-0 bottom-0" src={product.image as string} alt={`${product.name} cover image`} />
                                 </div>
                                 <p className="uppercase font-bold text-primary text-xs">{product.author}</p>
                                 <h4 className="capitalize font-bold text-lg">{product.name}</h4>

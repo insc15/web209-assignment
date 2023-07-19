@@ -1,6 +1,6 @@
 export default interface IProduct{
-    id: string | number;
-    image: string;
+    id?: string | number;
+    image: string | FileList;
     name: string;
     price: number;
     discount_price?: number;
