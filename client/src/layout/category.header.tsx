@@ -1,5 +1,5 @@
-import { getAll } from "@/api/categories";
 import ICate from "@/interfaces/category";
+import { getAll } from "@/services/category";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { BsGridFill, BsChevronDown } from "react-icons/bs";
@@ -10,6 +10,8 @@ export default function CategorySelector() {
   useEffect(() => {
     getAll().then(({ data }) => {
       setCategory(data);
+    }).catch((err) => {
+      console.log(err);
     })
   }, [])
 

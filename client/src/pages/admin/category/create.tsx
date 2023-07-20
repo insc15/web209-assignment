@@ -1,14 +1,12 @@
-import { create } from "@/api/categories";
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
+import { create } from "@/services/category";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 type FormValues = {
-
     name: string;
-
 }
 
 function PageAdminCreateCategories() {

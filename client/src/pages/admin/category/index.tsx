@@ -1,4 +1,4 @@
-import { getAll, remove } from "@/api/categories";
+import { getAll, remove } from "@/services/category";
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
 import { useEffect, useState } from "react";
@@ -10,6 +10,8 @@ function PageAdminCategories() {
     useEffect(() => {
         getAll().then(({ data }) => {
             setCategory(data);
+        }).catch((err) => {
+            console.log(err);
         })
     }, [])
     console.log(category);
@@ -18,7 +20,11 @@ function PageAdminCategories() {
             remove(id).then(() => {
                 getAll().then(({ data }) => {
                     setCategory(data);
+                }).catch((err) => {
+                    console.log(err);
                 })
+            }).catch((err) => {
+                console.log(err);
             })
         }
 
@@ -38,44 +44,43 @@ function PageAdminCategories() {
                 </Link>
             </div>
             <div className="shadow p-3 bg-white">
-            </div>
-            <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                    <tr>
-                        <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Id
-                        </th>
-                        <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Name
-                        </th>
-                        <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                    {category?.map((item: any, index: number) => (
-                        <tr key={index}>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                {index + 1}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                {item.name}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                                <Link to={`/admin/categories/update/${item._id}`}><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Update
-                                </button></Link>
-                                <button onClick={() => handRemove(item._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Delete
-                                </button>
-                            </td>
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Id
+                            </th>
+                            <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Name
+                            </th>
+                            <th scope="col" className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Action
+                            </th>
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {category?.map((item: any, index: number) => (
+                            <tr key={index}>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {index + 1}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    {item.name}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <Link to={`/admin/categories/update/${item._id}`}><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        Update
+                                    </button></Link>
+                                    <button onClick={() => handRemove(item._id)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
 
-                </tbody>
-            </table>
-
+                    </tbody>
+                </table>
+            </div>
         </Section>
     );
 }

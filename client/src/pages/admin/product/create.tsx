@@ -1,7 +1,9 @@
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
+import ICate from "@/interfaces/category";
+import { getAll } from "@/services/category";
 import { addProduct } from "@/services/product";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify"
 
@@ -24,6 +26,15 @@ type FormValues = {
 function PageAdminCreateProducts() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
+    const [categories, setCategories] = useState<ICate[]>([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const { data } : { data: ICate[] } = await getAll();
+            setCategories(data);
+        }
+        void fetchCategories();
+    }, []);
 
     const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
         const formData = new FormData();
@@ -68,9 +79,11 @@ function PageAdminCreateProducts() {
                         <div className="w-1/2 p-2">
                             <p className="mb-1">Danh mục</p>
                             <select className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("categoryId", {required: "Trường này là bắt buộc"})}>
-                                <option value={'64b6b65b6f7d78df3a9e6d86'}>Danh mục 1</option>
-                                <option value={2}>Danh mục 2</option>
-                                <option value={3}>Danh mục 3</option>
+                                {
+                                    categories.map((cate) => (
+                                        <option key={cate._id} value={cate._id}>{cate.name}</option>
+                                    ))
+                                }
                             </select>
                             {errors.categoryId && <span className="text-red-500 text-sm mt-1">{errors.categoryId.message}</span>}
                         </div>

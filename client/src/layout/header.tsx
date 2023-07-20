@@ -8,7 +8,7 @@ import CategorySelector from "./category.header";
 import { useState, useEffect, useRef } from "react";
 
 function Header() {
-    const [searchKeyword, setSearchKeyword] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState<string>('');
     // const location = useLocation();
     const navigate = useNavigate();
     // const [path, setPath] = useState<string>('');
@@ -17,11 +17,12 @@ function Header() {
     //     setPath(location.pathname);
     // }, [location.pathname]);
 
-    const handleSearchInputChange = (event: any) => {
-        setSearchKeyword(event.target.value);
+    const handleSearchInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+        const inputElement = event.target as HTMLInputElement;
+        setSearchKeyword(inputElement.value);
     };
 
-    const handleSearchSubmit = (event: any) => {
+    const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const searchParams = new URLSearchParams();
         searchParams.append('', searchKeyword);
@@ -60,11 +61,11 @@ function Header() {
                         </Link>
                     </div>
                     <div className="flex items-center w-3/4 justify-end">
-                        <form action="" onSubmit={handleSearchSubmit}>
-                            <label className="relative bg-gray-100 rounded-full w-full">
+                        <form className="w-full" action="" onSubmit={(event)=>handleSearchSubmit(event)}>
+                            <label className="relative bg-gray-100 rounded-full w-full block">
                                 <BiSearch size="22" className="text-gray-400 mr-3 absolute top-1/2 -translate-y-1/2 left-5" />
                                 <input value={searchKeyword}
-                                    onChange={handleSearchInputChange} className="bg-transparent outline-none w-full px-14 py-3" type="text" placeholder="Search products..." />
+                                    onInput={(event)=>handleSearchInputChange(event)} className="bg-transparent outline-none w-full px-14 py-3" type="text" placeholder="Search products..." />
                                 <button className="absolute top-0 bottom-0 bg-primary hover:bg-button-hover duration-150 rounded-full px-9 right-0 text-white">
                                     <BiSearch size="22" />
                                 </button>

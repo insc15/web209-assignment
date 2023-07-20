@@ -1,4 +1,4 @@
-import { update, get } from "@/api/categories";
+import { update, get } from "@/services/category";
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
 import { useEffect, useState } from "react";
@@ -26,6 +26,8 @@ function PageAdminUpdateCategories() {
     useEffect(() => {
         get(id).then(({ data }) => {
             setCategories(data)
+        }).catch((err) => {
+            console.log(err);
         })
     }, [])
     return (

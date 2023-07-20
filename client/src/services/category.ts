@@ -1,10 +1,11 @@
-import instance from "./Instance";
+import ICate from "@/interfaces/category"
+import instance from "./instance"
 
 export const create = (name: string) => {
     return instance.post("/categories", { name: name })
 }
 export const getAll = () => {
-    return instance.get("/categories")
+    return instance.get<ICate[]>("/categories")
 }
 export const remove = (id: string) => {
     return instance.delete("/categories/" + id)

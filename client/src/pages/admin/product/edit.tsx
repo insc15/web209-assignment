@@ -1,8 +1,7 @@
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
 import IProduct from "@/interfaces/product";
-import { addProduct, getProduct, updateProduct } from "@/services/product";
-import axios from "axios";
+import { getProduct, updateProduct } from "@/services/product";
 import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -38,7 +37,11 @@ function PageAdminUpdateProducts() {
             Object.keys(data).forEach(key => {
                 const value = data[key as keyof FormValues];
                 if(typeof value === "string") {
-                    formData.append(key, value);
+                    if(key === "discount_price" && value.length === 0){
+                        formData.append(key, '0');
+                    }else{
+                        formData.append(key, value);
+                    }
                 }else if(typeof value === "number") {
                     formData.append(key, value.toString());
                 }else if(typeof value === "object") {
@@ -60,23 +63,23 @@ function PageAdminUpdateProducts() {
     useEffect(() => {
         if(id){
             const fetchProduct = async () => {
-                const res = await getProduct(id);
-                if(res.status === 200) {
-                    setProduct(res.data);
+                const { data } = await getProduct(id);
+                if(data) {
+                    setProduct(data);
 
-                    setValue("name", res.data?.name);
-                    setValue("image", res.data?.image);
-                    setValue("price", res.data?.price);
-                    setValue("discount_price", res.data?.discount_price);
-                    setValue("short_description", res.data?.short_description);
-                    setValue("categoryId", res.data?.categoryId);
-                    setValue("stock", res.data?.stock);
-                    setValue("author", res.data?.author);
-                    setValue("description", res.data?.description);
-                    setValue("publisher", res.data?.publisher);
-                    setValue("page_num", res.data?.page_num);
-                    setValue("publishing_year", res.data?.publishing_year);
-                    setValue("language", res.data?.language);
+                    setValue("name", data?.name);
+                    setValue("image", data?.image);
+                    setValue("price", data?.price);
+                    setValue("discount_price", data?.discount_price);
+                    setValue("short_description", data?.short_description);
+                    setValue("categoryId", data?.categoryId);
+                    setValue("stock", data?.stock);
+                    setValue("author", data?.author);
+                    setValue("description", data?.description);
+                    setValue("publisher", data?.publisher);
+                    setValue("page_num", data?.page_num);
+                    setValue("publishing_year", data?.publishing_year);
+                    setValue("language", data?.language);
                 }
             }
             void fetchProduct();
@@ -115,7 +118,7 @@ function PageAdminUpdateProducts() {
                         </div>
                         <div className="w-1/2 p-2">
                             <p className="mb-1">Giá khuyến mãi</p>
-                            <input type="number" min={0} className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("discount_price", {required: "Trường này là bắt buộc", pattern: {value: /^[0-9]*$/, message: "Chỉ được phép nhập số"}, min: {value: 0, message: "Chỉ được phép nhập số dương"}})} />
+                            <input type="number" min={0} className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("discount_price", {pattern: {value: /^[0-9]*$/, message: "Chỉ được phép nhập số"}, min: {value: 0, message: "Chỉ được phép nhập số dương"}})} />
                             {errors.discount_price && <span className="text-red-500 text-sm mt-1">{errors.discount_price.message}</span>}
                         </div>
                         <div className="w-1/3 p-2">
