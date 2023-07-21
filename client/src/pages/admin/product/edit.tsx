@@ -86,7 +86,7 @@ function PageAdminUpdateProducts() {
                     setValue("price", data?.price);
                     setValue("discount_price", data?.discount_price);
                     setValue("short_description", data?.short_description);
-                    setValue("categoryId", (data?.categoryId as ICate)._id);
+                    setValue("categoryId", (data?.categoryId as ICate)?._id);
                     setValue("stock", data?.stock);
                     setValue("author", data?.author);
                     setValue("description", data?.description);

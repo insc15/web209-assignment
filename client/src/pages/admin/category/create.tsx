@@ -14,9 +14,9 @@ function PageAdminCreateCategories() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
 
-    const onSubmit = (data: FormValues) => {
+    const onSubmit = async (data: FormValues) => {
         console.log(data.name);
-        create(data.name)
+        await create(data.name)
         navigate("/admin/categories")
     }
     return (
@@ -37,7 +37,7 @@ function PageAdminCreateCategories() {
                         </div>
                     </div>
                     <div className="w-full p-2">
-                        <Button isLoading={isLoading} type="submit" className="w-full">Thêm danh mục mới</Button>
+                        <Button isLoading={isLoading} type="submit" className="w-fit mx-auto">Thêm danh mục mới</Button>
                     </div>
                 </form>
             </div>

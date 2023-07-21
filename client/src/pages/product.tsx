@@ -43,7 +43,7 @@ function PageProduct() {
                             <p className="text-sm text-gray-400">Tác giả: <span className="font-semibold text-gray-500">{product.author}</span></p>
                             <div className="flex gap-2 items-baseline my-5">
                                 <p className="text-primary font-semibold text-2xl">{currencyFormatter(product.discount_price || product.price)}</p>
-                                {product.discount_price && <p className="text-gray-400 line-through">{currencyFormatter(product.price)}</p>}
+                                {product.discount_price ? <p className="text-gray-400 line-through">{currencyFormatter(product.price)}</p> : ""}
                             </div>
                             <p className="text-sm text-gray-500">{product.short_description}</p>
                             <div className="flex items-center gap-3 my-5 pb-5 pt-3 border-y flex-wrap">
@@ -60,7 +60,7 @@ function PageProduct() {
                                     <span>Thêm vào giỏ hàng</span>
                                 </Button>
                                 <div className="w-full">
-                                { quantity >= product.stock ? <p className="text-red-500 text-sm">Bạn đã chọn đến số lượng tối đa của sản phẩm này</p> : <p className="text-sm text-gray-500">Còn lại: <span className="font-semibold text-gray-700">{product.stock - quantity}</span></p> }
+                                { quantity >= product.stock ? <p className="text-red-500 text-sm">Bạn đã chọn đến số lượng tối đa của sản phẩm này</p> : <p className="text-sm text-gray-500">Còn lại: <span className="font-semibold text-gray-700">{product.stock}</span></p> }
                                 </div>
                             </div>
                             <p className="text-sm text-gray-500">Danh mục: <span className="font-semibold text-gray-700">{(product.categoryId as ICate).name}</span></p>

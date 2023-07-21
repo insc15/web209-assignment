@@ -48,7 +48,7 @@ function PageAdminUpdateCategories() {
                         </div>
                     </div>
                     <div className="w-full p-2">
-                        <Button isLoading={isLoading} type="submit" className="w-full">Update</Button>
+                        <Button isLoading={isLoading} type="submit" className="w-fit mx-auto">Update</Button>
                     </div>
                 </form>
             </div>

@@ -2,10 +2,10 @@ import Container from "../components/layout/container";
 import { BsTelephoneInbound, BsPinterest, BsInstagram, BsFacebook, BsHandbag, BsHeart, BsPerson, BsGeoAlt } from "react-icons/bs";
 import { BiEnvelope, BiSearch, BiPhoneIncoming } from "react-icons/bi";
 import { FaGithub } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import CategorySelector from "./category.header";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 function Header() {
     const [searchKeyword, setSearchKeyword] = useState<string>('');
@@ -75,7 +75,7 @@ function Header() {
                                 </button>
                             </label>
                         </form>
-                        <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p>
+                        {/* <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p> */}
                         <ul className="flex items-center">
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
                                 <BsPerson size="26" />

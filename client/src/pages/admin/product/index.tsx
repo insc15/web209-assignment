@@ -78,7 +78,7 @@ function PageAdminProducts() {
       }),
       columnHelper.accessor("categoryId", {
         header: "Danh mục",
-        cell: (info) => info.getValue().name,
+        cell: (info) => info.getValue()?.name,
       }),
       columnHelper.accessor("price", {
         header: "Giá",

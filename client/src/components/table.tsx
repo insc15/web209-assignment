@@ -9,7 +9,7 @@ import {
 import { useMemo } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function Table({ data, columns }: { data: Array<unknown>; columns: ColumnDef<any, unknown>[] }) {
+function Table({ data, columns }: { data: Array<unknown>; columns: ColumnDef<any, any>[] }) {
   const table = useReactTable({
     data: useMemo(() => data, [data]),
     columns,
@@ -56,7 +56,7 @@ function Table({ data, columns }: { data: Array<unknown>; columns: ColumnDef<any
           }
         </tbody>
       </table>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 mt-4">
         <button
           className="border rounded p-1"
           onClick={() => table.setPageIndex(0)}
@@ -86,14 +86,14 @@ function Table({ data, columns }: { data: Array<unknown>; columns: ColumnDef<any
           {">>"}
         </button>
         <span className="flex items-center gap-1">
-          <div>Page</div>
+          <div>Trang</div>
           <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getState().pagination.pageIndex + 1} /{" "}
             {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
-          | Go to page:
+          | Đi tới trang:
           <input
             type="number"
             defaultValue={table.getState().pagination.pageIndex + 1}
@@ -110,9 +110,9 @@ function Table({ data, columns }: { data: Array<unknown>; columns: ColumnDef<any
             table.setPageSize(Number(e.target.value));
           }}
         >
-          {[10, 2, 30, 40, 50].map((pageSize) => (
+          {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              Hiển thị {pageSize} hàng
             </option>
           ))}
         </select>

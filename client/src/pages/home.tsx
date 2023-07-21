@@ -6,16 +6,26 @@ import ListProducts from '../components/listProducts';
 import { useEffect, useState } from 'react';
 import { getProducts } from '@/services/product';
 import IProduct from '@/interfaces/product';
+import { getAll } from '@/services/category';
 
 function PageHome() {
-    const [products, setProducts] = useState<IProduct[]>([]);
+    const [categories, setCategories] = useState<{id: string, name: string ,products: IProduct[]}[]>([]);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-          const { data: products } = await getProducts();
-          setProducts(products);
-        };
-        void fetchProducts();
+        const fetchCategories = async () => {
+            const categoriesData = []
+            const { data: categories } = await getAll();
+            for (const category of categories) {
+                const { data: products } = await getProducts(false, `categoryId=${category._id}`);
+                categoriesData.push({
+                    id: category._id,
+                    name: category.name,
+                    products: products
+                })
+            }
+            setCategories(categoriesData);
+        }
+        void fetchCategories();
       }, []);
 
     return (
@@ -32,21 +42,31 @@ function PageHome() {
                     </button>
                 </Container>
             </Section>
-            <Section>
+            {
+                categories.map((category, index) => (
+                    <Section key={index}>
+                        <Container>
+                            <h2 className='capitalize font-bold text-2xl mb-6'>{category.name}</h2>
+                            <ListProducts products={category.products}/>
+                        </Container>
+                    </Section>
+                ))
+            }
+            {/* <Section>
                 <Container>
-                    <h2 className='capitalize font-bold text-2xl mb-6'>Trending now</h2>
+                    <h2 className='capitalize font-bold text-2xl mb-6'>Sách Y Học</h2>
                     <ListProducts products={products}/>
                 </Container>
             </Section>
             <Section>
                 <Container>
-                    <h2 className='capitalize font-bold text-2xl mb-6'>Bestselling Books</h2>
+                    <h2 className='capitalize font-bold text-2xl mb-6'>Sách kinh doanh</h2>
                     <ListProducts products={products}/>
                 </Container>
             </Section>
             <Section>
                 <Container>
-                    <h2 className='capitalize font-bold text-2xl mb-6'>All books</h2>
+                    <h2 className='capitalize font-bold text-2xl mb-6'>Tất cả sản phẩm</h2>
                     <ListProducts products={products} limit={10}/>
                 </Container>
             </Section>
@@ -56,7 +76,7 @@ function PageHome() {
                         
                     </div>
                 </Container>
-            </Section>
+            </Section> */}
         </>
     );
 }

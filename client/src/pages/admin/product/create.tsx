@@ -59,12 +59,12 @@ function PageAdminCreateProducts() {
         setIsLoading(true);
             try {
                 await addProduct(formData);
-                toast.success("Sửa sản phẩm thành công")
+                toast.success("Thêm sản phẩm thành công")
                 setTimeout(() => {
                     navigator("/admin/products");
                 }, 1000);
             } catch (error) {
-                toast.error("Sửa sản phẩm thất bại")
+                toast.error("Thêm sản phẩm thất bại")
             }
 
             setIsLoading(false);

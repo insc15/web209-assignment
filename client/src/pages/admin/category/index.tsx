@@ -39,7 +39,7 @@ function PageAdminCategories() {
                 <Link to={'/admin/categories/create'}>
                     <Button className="flex items-center">
                         <BsPlus className="text-3xl" />
-                        <span className="ml-2">Thêm sản danh mục</span>
+                        <span className="ml-2">Thêm danh mục</span>
                     </Button>
                 </Link>
             </div>
