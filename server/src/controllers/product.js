@@ -2,6 +2,7 @@ import joi from "joi";
 import Product from "../models/product";
 import Category from "../models/category";
 import cloudinary from "cloudinary";
+import mongoose from "mongoose";
 
 cloudinary.config({ 
   cloud_name: 'dpudrx9vt', 
@@ -14,7 +15,7 @@ const productSchema = joi.object({
   price: joi.number().required(),
   description: joi.string().required(),
   categoryId: joi.string().required(),
-  discount_price: joi.number().required(),
+  discount_price: joi.number(),
   short_description: joi.string().required(),
   stock: joi.number().required(),
   author: joi.string().required(),
@@ -25,9 +26,19 @@ const productSchema = joi.object({
 });
 
 export const getAll = async (req, res) => {
+  const validCategoryIds = [];
+  (req.query.categoryId?.split(",") || []).forEach(id => {
+    if(mongoose.Types.ObjectId.isValid(id)){
+      validCategoryIds.push(new mongoose.Types.ObjectId(id));
+    }
+  });
+  const categoryFilter = validCategoryIds.length > 0 ? {categoryId: {$in: validCategoryIds}} : {};
   try {
-    // const { data: products } = await axios.get(`${API_URI}/products`);
-    const products = await Product.find().populate("categoryId");
+    const products = await Product.find({
+      name: { $regex: req.query.s || "", $options: "i" },
+      ...categoryFilter,
+      price: { $gte: req.query.minPrice || 0, $lte: req.query.maxPrice || 1000000000 },
+    }).populate("categoryId");
     if (products.length === 0) {
       return res.json({
         message: "Không có sản phẩm nào",

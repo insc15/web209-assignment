@@ -5,6 +5,7 @@ import { getAll } from "@/services/category";
 import { addProduct } from "@/services/product";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"
 
 type FormValues = {
@@ -27,6 +28,7 @@ function PageAdminCreateProducts() {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
     const [categories, setCategories] = useState<ICate[]>([]);
+    const navigator = useNavigate();
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -42,7 +44,11 @@ function PageAdminCreateProducts() {
         Object.keys(data).forEach(key => {
             const value = data[key as keyof FormValues];
             if(typeof value === "string") {
-                formData.append(key, value);
+                if(key === "discount_price" && value.length === 0){
+                    formData.append(key, '0');
+                }else{
+                    formData.append(key, value);
+                }
             }else if(typeof value === "number") {
                 formData.append(key, value.toString());
             }else if(typeof value === "object") {
@@ -51,13 +57,17 @@ function PageAdminCreateProducts() {
         });
 
         setIsLoading(true);
+            try {
+                await addProduct(formData);
+                toast.success("Sửa sản phẩm thành công")
+                setTimeout(() => {
+                    navigator("/admin/products");
+                }, 1000);
+            } catch (error) {
+                toast.error("Sửa sản phẩm thất bại")
+            }
 
-        const res = await addProduct(formData);
-        if(res.status === 200) {
-            toast.success("Thêm sản phẩm thành công")
-        }
-
-        setIsLoading(false);
+            setIsLoading(false);
     }
 
     return (
@@ -65,7 +75,7 @@ function PageAdminCreateProducts() {
             <div className="flex items-center justify-between mb-8">
                 <h1 className="text-2xl font-semibold flex items-center">
                     <span className="w-1 h-6 bg-primary block mr-2"></span>
-                    <span>Create Products</span>
+                    <span>Tạo sản phẩm</span>
                 </h1>
             </div>
             <div className="shadow p-10 bg-white">
@@ -94,7 +104,7 @@ function PageAdminCreateProducts() {
                         </div>
                         <div className="w-1/2 p-2">
                             <p className="mb-1">Giá khuyến mãi</p>
-                            <input type="number" min={0} className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("discount_price", {required: "Trường này là bắt buộc", pattern: {value: /^[0-9]*$/, message: "Chỉ được phép nhập số"}, min: {value: 0, message: "Chỉ được phép nhập số dương"}})} />
+                            <input type="number" min={0} className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("discount_price", {pattern: {value: /^[0-9]*$/, message: "Chỉ được phép nhập số"}, min: {value: 0, message: "Chỉ được phép nhập số dương"}})} />
                             {errors.discount_price && <span className="text-red-500 text-sm mt-1">{errors.discount_price.message}</span>}
                         </div>
                         <div className="w-1/3 p-2">

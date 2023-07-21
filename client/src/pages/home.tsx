@@ -6,7 +6,6 @@ import ListProducts from '../components/listProducts';
 import { useEffect, useState } from 'react';
 import { getProducts } from '@/services/product';
 import IProduct from '@/interfaces/product';
-// import products from './db';
 
 function PageHome() {
     const [products, setProducts] = useState<IProduct[]>([]);

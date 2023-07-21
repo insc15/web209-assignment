@@ -9,6 +9,8 @@ import PageAdminCreateCategories from "./pages/admin/category/create";
 import PageAdminCategories from "./pages/admin/category";
 import PageAdminUpdateCategories from "./pages/admin/category/update";
 import PageAdminUpdateProducts from "./pages/admin/product/edit";
+import PageProduct from "./pages/product";
+import PageSearch from "./pages/search";
 
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
       <Route path="/" element={<DefaultLayout />} >
         <Route index element={<PageHome />} />
         <Route path="/shop" element={<PageShop />} />
+        <Route path="/product/:id" element={<PageProduct />} />
+        <Route path="/search" element={<PageSearch />} />
       </Route>
       <Route path="admin" element={<AdminLayout />} >
         <Route index element={<PageAdminDashboard />} />

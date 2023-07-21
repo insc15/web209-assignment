@@ -1,3 +1,5 @@
+import ICate from "./category";
+
 export default interface IProduct{
     _id?: string | number;
     image: string | FileList;
@@ -5,7 +7,7 @@ export default interface IProduct{
     price: number;
     discount_price?: number;
     short_description?: string;
-    categoryId: number;
+    categoryId: string | ICate;
     stock: number;
     author: string;
     description: string;

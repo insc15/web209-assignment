@@ -81,9 +81,9 @@ function Show({ showOtps = [], current, setFilter = () => {return;} } : { showOt
 
 type FormValues = { [k: string]: string | string[]; }
 
-function PageShop() {
-  const [priceRangeValues, setPriceRangeValues] = useState<number[]>([20, 40]);
-  const [priceRangeConfig, setPriceRangeConfig] = useState<{min: number, max: number}>({min: 0, max: 100})
+function PageSearch() {
+  const [priceRangeValues, setPriceRangeValues] = useState<number[]>([0, 1]);
+  const [priceRangeConfig, setPriceRangeConfig] = useState<{min: number, max: number}>({min: 0, max: 1})
   const [showFilter, setShowFilter] = useState<string>('20');
   const [sort, setSort] = useState<string>('default');
   const [products, setProducts] = useState<IProduct[]>([])
@@ -111,13 +111,15 @@ function PageShop() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: products } = await getProducts();
+      const { data: products } = await getProducts(true, searchParams.toString());
       const { data: categories } = await getAll();
 
       const min = 0;
       const max = Math.max(...products.map((product) => product.price)) + 100000;
-      setPriceRangeConfig({min, max});
-      setPriceRangeValues([min, max]);
+      if(max > min){
+        setPriceRangeConfig({min, max});
+        setPriceRangeValues([min, max]);
+      }
 
       setProducts(products);
       setFilteredProducts(products);
@@ -127,15 +129,10 @@ function PageShop() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async () => {      
       const { data: products } = await getProducts(true, searchParams.toString());
       setProducts(products);
       setFilteredProducts(products);
-
-      const min = 0;
-      const max = Math.max(...products.map((product) => product.price)) + 100000;
-      setPriceRangeConfig({min, max});
-      setPriceRangeValues([min, max]);
     };
     void fetchData();
   }, [searchParams]);
@@ -143,13 +140,16 @@ function PageShop() {
   useEffect(() => {
     switch (sort) {
       case 'low-to-high':
-        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => a.price - b.price));
+        setFilteredProducts([...products].sort((a, b) => a.price - b.price));
+        setProducts([...products].sort((a, b) => a.price - b.price));
         break;
       case 'high-to-low':
-        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => b.price - a.price));
+        setFilteredProducts([...products].sort((a, b) => b.price - a.price));
+        setProducts([...products].sort((a, b) => b.price - a.price));
         break;
       default:
-        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
+        setFilteredProducts([...products].sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
+        setProducts([...products].sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
         break;
     }
   },[sort])
@@ -157,29 +157,19 @@ function PageShop() {
   const onSubmit = (data: FormValues) => {
     const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null && v != '' && v.length > 0));
     const params = new URLSearchParams();
+    params.append('s', searchParams.get('s') as string);
     Object.entries(filteredData).forEach(([k, v]) => {
       params.append(k, v as string);
     });
-    void navigate(`/shop?${new URLSearchParams(params).toString()}`, { replace: true })
+    void navigate(`/search?${new URLSearchParams(params).toString()}`, { replace: true })
   }
 
   const priceFilter = (values: number[]) => {
+    
       const min = values[0]
       const max = values[1]
-      switch (sort) {
-        case 'low-to-high':
-          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => a.price - b.price));
-          // setProducts([...products].sort((a, b) => a.price - b.price));
-          break;
-        case 'high-to-low':
-          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => b.price - a.price));
-          // setProducts([...products].sort((a, b) => b.price - a.price));
-          break;
-        default:
-          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
-          // setProducts([...products].sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
-          break;
-      }
+
+      setFilteredProducts(products.filter((product) => product.price >= min && product.price <= max));
   }
 
   useEffect(() => {
@@ -189,7 +179,7 @@ function PageShop() {
 
   return (
     <>
-      <Breadcrumb title={"Cửa hàng"} />
+      <Breadcrumb title={"Tìm kiếm"} />
       <Section>
         <Container className="flex gap-10">
           <div className="w-3/12">
@@ -245,8 +235,8 @@ function PageShop() {
               </div>
               <div className="flex items-center">
                   <Sorting sortOtps={sortOtps} setFilter={setSort} current={sort}/>
-                  {/* <span className="mx-2 text-gray-300 font-light">|</span>
-                  <Show showOtps={showOtps} current={showFilter} setFilter={setShowFilter}/> */}
+                  {/* <span className="mx-2 text-gray-300 font-light">|</span> */}
+                  {/* <Show showOtps={showOtps} current={showFilter} setFilter={setShowFilter}/> */}
               </div>
             </div>
             <ListProducts products={filteredProducts} columns={3} limit={24} />
@@ -257,4 +247,4 @@ function PageShop() {
   );
 }
 
-export default PageShop;
+export default PageSearch;

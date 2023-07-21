@@ -10,21 +10,28 @@ export function addProduct(product: FormData) {
     });
 }
 
-export async function getProducts() {
-    const { data } = await instance.get<IProduct[]>('/products');
+export async function getProducts(isBlobImage?: boolean, queryParam?: string) {
+    const { data } = await instance.get<IProduct[]>('/products' + (queryParam ? ('?'+queryParam) : ''));
     const newData : IProduct[] = []
-    for (const item of data) {
-        const { data: imageBuffer } : { data: Blob } = await axios.get(item.image as string, { responseType: 'blob' });
-        item.image = URL.createObjectURL(imageBuffer);
-        newData.push(item);
+    if(isBlobImage && data.length > 0) {
+        for (const item of data) {
+            const { data: imageBuffer } : { data: Blob } = await axios.get(item.image as string, { responseType: 'blob' });
+            item.image = URL.createObjectURL(imageBuffer);
+            newData.push(item);
+        }
+    } else if(data.length > 0) {
+        newData.push(...data);
     }
     return { data: newData };
 }
 
-export async function getProduct(id: number | string) {
+export async function getProduct(id: number | string, isBlobImage?: boolean) {
     const { data } = await instance.get<IProduct>(`/products/${id}`)
-    const { data: imageBuffer } : { data: Blob } = await axios.get(data.image as string, { responseType: 'blob' });
-    data.image = URL.createObjectURL(imageBuffer);
+    
+    if(isBlobImage) {
+        const { data: imageBuffer } : { data: Blob } = await axios.get(data.image as string, { responseType: 'blob' });
+        data.image = URL.createObjectURL(imageBuffer);
+    }
     return { data: data };
 }
 

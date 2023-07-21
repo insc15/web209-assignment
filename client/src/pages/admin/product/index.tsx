@@ -53,7 +53,7 @@ function PageAdminProducts() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const { data: products } = await getProducts();
+      const { data: products } = await getProducts(true);
       setProducts(products as IProductTable[]);
     };
     void fetchProducts();
@@ -74,7 +74,7 @@ function PageAdminProducts() {
       }),
       columnHelper.accessor("name", {
         header: "Tên sản phẩm",
-        cell: (info) => info.getValue(),
+        cell: ({row, cell}) => <a className="hover:text-primary" target="_blank" href={`/products/${row.original._id as string}`}>{cell.getValue()}</a>,
       }),
       columnHelper.accessor("categoryId", {
         header: "Danh mục",

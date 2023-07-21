@@ -1,10 +1,12 @@
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
+import ICate from "@/interfaces/category";
 import IProduct from "@/interfaces/product";
+import { getAll } from "@/services/category";
 import { getProduct, updateProduct } from "@/services/product";
 import { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify"
 
 type FormValues = {
@@ -13,7 +15,7 @@ type FormValues = {
     price: number;
     discount_price?: number;
     short_description?: string;
-    categoryId: number;
+    categoryId: string;
     stock: number;
     author: string;
     description: string;
@@ -27,7 +29,9 @@ function PageAdminUpdateProducts() {
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [product, setProduct] = useState<IProduct | null>(null);
+    const [categories, setCategories] = useState<ICate[]>([]);
     const { register, handleSubmit, formState: { errors }, watch, setValue } = useForm<FormValues>();
+    const navigator = useNavigate();
 
     const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
         if(product && product._id){
@@ -51,9 +55,14 @@ function PageAdminUpdateProducts() {
 
             setIsLoading(true);
 
-            const res = await updateProduct(product._id, formData);
-            if(res.status === 200) {
+            try {
+                await updateProduct(product._id, formData);
                 toast.success("Sửa sản phẩm thành công")
+                setTimeout(() => {
+                    navigator("/admin/products");
+                }, 1000);
+            } catch (error) {
+                toast.error("Sửa sản phẩm thất bại")
             }
 
             setIsLoading(false);
@@ -62,6 +71,11 @@ function PageAdminUpdateProducts() {
 
     useEffect(() => {
         if(id){
+            const fetchCategories = async () => {
+                const { data } = await getAll();
+                setCategories(data);
+            }
+
             const fetchProduct = async () => {
                 const { data } = await getProduct(id);
                 if(data) {
@@ -72,7 +86,7 @@ function PageAdminUpdateProducts() {
                     setValue("price", data?.price);
                     setValue("discount_price", data?.discount_price);
                     setValue("short_description", data?.short_description);
-                    setValue("categoryId", data?.categoryId);
+                    setValue("categoryId", (data?.categoryId as ICate)._id);
                     setValue("stock", data?.stock);
                     setValue("author", data?.author);
                     setValue("description", data?.description);
@@ -82,9 +96,11 @@ function PageAdminUpdateProducts() {
                     setValue("language", data?.language);
                 }
             }
+
+            void fetchCategories();
             void fetchProduct();
         }
-    }, [id])
+    }, [id, setValue])
 
     return (
         <Section className="px-6">
@@ -105,9 +121,11 @@ function PageAdminUpdateProducts() {
                         <div className="w-1/2 p-2">
                             <p className="mb-1">Danh mục</p>
                             <select className="w-full border duration-150 outline-none border-gray-200 p-2 rounded focus:border-primary" {...register("categoryId", {required: "Trường này là bắt buộc"})}>
-                                <option value={'64b6b65b6f7d78df3a9e6d86'}>Danh mục 1</option>
-                                <option value={2}>Danh mục 2</option>
-                                <option value={3}>Danh mục 3</option>
+                                {
+                                    categories.map((cate) => (
+                                        <option key={cate._id} value={cate._id}>{cate.name}</option>
+                                    ))
+                                }
                             </select>
                             {errors.categoryId && <span className="text-red-500 text-sm mt-1">{errors.categoryId.message}</span>}
                         </div>

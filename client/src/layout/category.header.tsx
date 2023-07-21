@@ -20,7 +20,7 @@ export default function CategorySelector() {
     <Menu as="div" className="relative">
       <Menu.Button className="inline-flex w-full items-center rounded-full bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-button-hover duration-150 focus:outline-none">
         <BsGridFill className="mr-2" />
-        <p>Categories</p>
+        <p>Danh mục</p>
         <BsChevronDown className="ml-auto" />
       </Menu.Button>
       <Transition

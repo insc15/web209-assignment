@@ -1,4 +1,4 @@
-import { AppContext } from "@/contexts/appContext";
+import { AppContext } from "@/context/appContext";
 import DialogContextType from "@/interfaces/dialogContext";
 import { useContext } from "react";
 

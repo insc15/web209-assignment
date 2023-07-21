@@ -17,6 +17,10 @@ function Header() {
     //     setPath(location.pathname);
     // }, [location.pathname]);
 
+    useEffect(() => {
+        setSearchKeyword('');
+    }, [navigate]);
+
     const handleSearchInputChange = (event: React.FormEvent<HTMLInputElement>) => {
         const inputElement = event.target as HTMLInputElement;
         setSearchKeyword(inputElement.value);
@@ -25,7 +29,7 @@ function Header() {
     const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const searchParams = new URLSearchParams();
-        searchParams.append('', searchKeyword);
+        searchParams.append('s', searchKeyword);
         navigate({
             pathname: 'search',
             search: searchParams.toString()
@@ -94,11 +98,11 @@ function Header() {
                 </div>
                 <nav className="w-10/12 flex items-center justify-end">
                     <ul className="flex justify-center font-medium w-full">
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Home</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">About</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/shop">Shop</Link></li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Blog</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Contact</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/">Trang chủ</Link></li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Về chúng tôi</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/shop">Cửa hàng</Link></li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Tin tức</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Liên hệ</li>
                     </ul>
                     <div className="flex items-center shrink-0">
                         <div className="p-2 rounded-full bg-gray-200 text-primary">
