@@ -6,16 +6,11 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import CategorySelector from "./category.header";
 import { useState, useEffect } from "react";
+import HeaderCart from "./cart.header";
 
 function Header() {
     const [searchKeyword, setSearchKeyword] = useState<string>('');
-    // const location = useLocation();
     const navigate = useNavigate();
-    // const [path, setPath] = useState<string>('');
-    // const headerRef = useRef(null);
-    // useEffect(() => {
-    //     setPath(location.pathname);
-    // }, [location.pathname]);
 
     useEffect(() => {
         setSearchKeyword('');
@@ -84,9 +79,8 @@ function Header() {
                                 <BsHeart size="22" />
                                 <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">0</span>
                             </li>
-                            <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
-                                <BsHandbag size="22" />
-                                <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">0</span>
+                            <li className="relative ml-5 hover:text-primary duration-150">
+                                <HeaderCart/>
                             </li>
                         </ul>
                     </div>

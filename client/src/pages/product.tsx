@@ -1,30 +1,26 @@
 import Breadcrumb from "@/components/breadcrumb";
 import Container from "@/components/layout/container";
 import Section from "@/components/layout/section";
-import IProduct from "@/interfaces/product";
 import currencyFormatter from "@/lib/currencyFormatter";
-import { getProduct } from "@/services/product";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BsCartPlus, BsDash, BsPlus } from "react-icons/bs";
 import Button from "@/components/layout/button";
 import { Tab } from "@headlessui/react";
 import ICate from "@/interfaces/category";
+import { useGetProductQuery } from "@/redux/services/product";
+import { addCartItem } from "@/redux/slices/cart";
+import { useDispatch } from "react-redux";
 
 function PageProduct() {
     const { id } = useParams();
-    const [product, setProduct] = useState<IProduct>();
+    const { data : product } = useGetProductQuery(id || "");
     const [quantity, setQuantity] = useState(1);
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        if(id) {
-            const fetchProduct = async () => {
-                const { data: product } = await getProduct(id);
-                setProduct(product);
-            };
-            void fetchProduct();
-        }
-    }, [id]);
+    const handleAddToCart = () => {
+        dispatch(addCartItem({_id: product?._id as string, quantity: quantity}))
+    }
 
     return product && (
         <>
@@ -55,7 +51,7 @@ function PageProduct() {
                                         <button onClick={()=>setQuantity(quantity + 1 > product.stock ? quantity : quantity + 1)} className="py-3 px-3 rounded-full hover:bg-gray-300 duration-150"><BsPlus className="text-xl"/></button>
                                     </div>
                                 </div>
-                                <Button className="bg-primary hover:bg-primary/90 text-white px-5 py-3 leading-none rounded-full duration-150">
+                                <Button onClick={handleAddToCart} className="bg-primary hover:bg-primary/90 text-white px-5 py-3 leading-none rounded-full duration-150">
                                     <BsCartPlus className="text-lg mr-2"/>
                                     <span>Thêm vào giỏ hàng</span>
                                 </Button>

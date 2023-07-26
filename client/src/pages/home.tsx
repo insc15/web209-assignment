@@ -2,31 +2,28 @@ import banner from '../assets/images/banner.jpg';
 import Container from '../components/layout/container';
 import Section from '../components/layout/section';
 import { BsChevronRight } from 'react-icons/bs';
-import ListProducts from '../components/listProducts';
 import { useEffect, useState } from 'react';
-import { getProducts } from '@/services/product';
+import { useGetCategoriesQuery } from '@/redux/services/category';
 import IProduct from '@/interfaces/product';
-import { getAll } from '@/services/category';
+import ListProducts from '@/components/listProducts';
+import { useGetProductsQuery } from '@/redux/services/product';
 
 function PageHome() {
-    const [categories, setCategories] = useState<{id: string, name: string ,products: IProduct[]}[]>([]);
+    const [productByCategory, setProductByCategory] = useState<{products: IProduct[], name: string, _id: string}[]>([]);
+    const { data: categories } = useGetCategoriesQuery();
+    const { data: products } = useGetProductsQuery();
 
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const categoriesData = []
-            const { data: categories } = await getAll();
-            for (const category of categories) {
-                const { data: products } = await getProducts(false, `categoryId=${category._id}`);
-                categoriesData.push({
-                    id: category._id,
-                    name: category.name,
-                    products: products
-                })
-            }
-            setCategories(categoriesData);
-        }
-        void fetchCategories();
-      }, []);
+    // useEffect(() => {
+    //     const fetchCategories = async () => {
+    //         if(categories && categories.length > 0) {
+    //             for (const category of categories) {
+    //                 // const { data: products } = await getProducts(false, `categoryId=${category._id}`);
+    //                 // setProductByCategory(prev => [...prev, {products, name: category.name, _id: category._id}]);
+    //             }
+    //         }
+    //     }
+    //     void fetchCategories();
+    //   }, [categories]);
 
     return (
         <>
@@ -42,23 +39,27 @@ function PageHome() {
                     </button>
                 </Container>
             </Section>
-            {
-                categories.map((category, index) => (
+            {/* {
+                productByCategory.length > 0 && productByCategory.map((category, index) => (
                     <Section key={index}>
                         <Container>
                             <h2 className='capitalize font-bold text-2xl mb-6'>{category.name}</h2>
-                            <ListProducts products={category.products}/>
+                            <ListProducts products={productByCategory.products}/>
                         </Container>
                     </Section>
                 ))
+            } */}
+            {
+                products && products.length > 0 && (
+                    <Section>
+                        <Container>
+                            <h2 className='capitalize font-bold text-2xl mb-6'>Sách Y Học</h2>
+                            <ListProducts products={products}/>
+                        </Container>
+                    </Section>
+                )
             }
             {/* <Section>
-                <Container>
-                    <h2 className='capitalize font-bold text-2xl mb-6'>Sách Y Học</h2>
-                    <ListProducts products={products}/>
-                </Container>
-            </Section>
-            <Section>
                 <Container>
                     <h2 className='capitalize font-bold text-2xl mb-6'>Sách kinh doanh</h2>
                     <ListProducts products={products}/>
