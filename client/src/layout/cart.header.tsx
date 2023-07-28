@@ -41,8 +41,10 @@ function HeaderCart() {
             {({ open }) => (
             <div onMouseEnter={() => handleEnter(open)} onMouseLeave={() => handleLeave(open)}>
                 <Popover.Button as={'div'} ref={triggerRef} className={'cursor-pointer'}>
-                    <BsHandbag size="22" />
-                    <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">{cartItemCount}</span>
+                    <Link to="/checkout" className="relative">
+                        <BsHandbag size="22" />
+                        <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">{cartItemCount}</span>
+                    </Link>
                 </Popover.Button>
                 <Transition
                     as={Fragment}
@@ -58,10 +60,10 @@ function HeaderCart() {
                             cartItems.length > 0 ? (
                                 <div className="px-4 py-3 bg-white shadow rounded divide-y">
                                     {
-                                        cartItems.map((item) => {
+                                        cartItems.map((item, index) => {
                                             const product = getProduct(item._id);
                                             return product && (
-                                                <div className="flex items-start -mx-1 py-2 first:pt-0 last:pb-0">
+                                                <div key={index} className="flex items-start -mx-1 py-2 first:pt-0 last:pb-0">
                                                     <div className="w-3/12 px-1">
                                                         <Link to={`/product/${product._id as string}`}>
                                                             <img className="w-full h-full aspect-square object-contain rounded" src={product.image as string} alt="" />
@@ -87,7 +89,7 @@ function HeaderCart() {
                                         <p className="text-sm font-medium px-1 text-black">{currencyFormatter(cartItems.reduce((total, item) => total + item.quantity * (getProduct(item._id)?.price as number), 0))}</p>
                                     </div>
                                     <div className="flex items-center justify-center py-3">
-                                        <Link to="/cart" className="w-full text-center bg-primary hover:bg-button-hover duration-150 text-white rounded py-2 px-4 text-sm font-medium">Xem giỏ hàng</Link>
+                                        <Link to="/checkout" className="w-full text-center bg-primary hover:bg-button-hover duration-150 text-white rounded py-2 px-4 text-sm font-medium">Xem giỏ hàng</Link>
                                     </div>
                                 </div>
                             ) : (

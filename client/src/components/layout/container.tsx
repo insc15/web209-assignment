@@ -1,8 +1,11 @@
-function Container({children, className} : {children: React.ReactNode, className?: string}) {
+import { FormEventHandler } from "react";
+
+function Container({children, className, as, ...rest} : {children: React.ReactNode, className?: string, as?: keyof JSX.IntrinsicElements,[x: string]: string | number | React.ReactNode | (() => void) | FormEventHandler<HTMLFormElement> | undefined}) {
+    const Component = as ? as : 'div'
     return (
-        <div className={`max-w-screen-xl mx-auto px-3 ${className ? className : ''}`}>
+        <Component className={`max-w-screen-xl mx-auto px-3 ${className ? className : ''}`} {...rest}>
             {children}
-        </div>
+        </Component>
     );
 }
 
