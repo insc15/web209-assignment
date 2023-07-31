@@ -1,16 +1,22 @@
-import Section from "@/components/layout/section";
 
-function PageAdminDashboard() {
+const DashBoard = () => {
     return (
-        <Section className="px-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-semibold flex items-center mb-4">
-                    <span className="w-1 h-6 bg-primary block mr-2"></span>
-                    <span>Admin Dashboard</span>
-                </h1>
+        <div className="flex">
+            <div className="flex flex-col flex-1 min-h-screen bg-gray-200">
+
+                <nav className="bg-white py-4 px-6 shadow">
+                </nav>
+                <div className="flex-1 p-10">
+                    <h1 className="text-2xl font-semibold mb-6">Dashboard</h1>
+
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                    </div>
+                </div>
             </div>
-        </Section>
-    );
+        </div>
+    )
 }
 
-export default PageAdminDashboard;
+export default DashBoard
