@@ -1,4 +1,4 @@
-import { update, get } from "@/api/categories";
+import { update, get } from "@/services/category";
 import Button from "@/components/layout/button";
 import Section from "@/components/layout/section";
 import { useEffect, useState } from "react";
@@ -26,6 +26,8 @@ function PageAdminUpdateCategories() {
     useEffect(() => {
         get(id).then(({ data }) => {
             setCategories(data)
+        }).catch((err) => {
+            console.log(err);
         })
     }, [])
     return (
@@ -46,7 +48,7 @@ function PageAdminUpdateCategories() {
                         </div>
                     </div>
                     <div className="w-full p-2">
-                        <Button isLoading={isLoading} type="submit" className="w-full">Update</Button>
+                        <Button isLoading={isLoading} type="submit" className="w-fit mx-auto">Update</Button>
                     </div>
                 </form>
             </div>

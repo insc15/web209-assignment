@@ -9,7 +9,7 @@ function Breadcrumb({title} : {title: string}) {
             <Container className="flex justify-between items-center">
                 <h1 className="text-4xl font-bold">{title}</h1>
                 <div className="font-medium text-gray-400 flex items-center">
-                    <Link to={'/'} className="hover:text-primary duration-150">Home</Link>
+                    <Link to={'/'} className="hover:text-primary duration-150">Trang chủ</Link>
                     <BsArrowRight className="mx-2" />
                     <span className="text-primary">{title}</span>
                 </div>

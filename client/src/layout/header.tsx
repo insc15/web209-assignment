@@ -2,29 +2,29 @@ import Container from "../components/layout/container";
 import { BsTelephoneInbound, BsPinterest, BsInstagram, BsFacebook, BsHandbag, BsHeart, BsPerson, BsGeoAlt } from "react-icons/bs";
 import { BiEnvelope, BiSearch, BiPhoneIncoming } from "react-icons/bi";
 import { FaGithub } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import CategorySelector from "./category.header";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import HeaderCart from "./cart.header";
 
 function Header() {
-    const [searchKeyword, setSearchKeyword] = useState('');
-    // const location = useLocation();
+    const [searchKeyword, setSearchKeyword] = useState<string>('');
     const navigate = useNavigate();
-    // const [path, setPath] = useState<string>('');
-    // const headerRef = useRef(null);
-    // useEffect(() => {
-    //     setPath(location.pathname);
-    // }, [location.pathname]);
 
-    const handleSearchInputChange = (event: any) => {
-        setSearchKeyword(event.target.value);
+    useEffect(() => {
+        setSearchKeyword('');
+    }, [navigate]);
+
+    const handleSearchInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+        const inputElement = event.target as HTMLInputElement;
+        setSearchKeyword(inputElement.value);
     };
 
-    const handleSearchSubmit = (event: any) => {
+    const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const searchParams = new URLSearchParams();
-        searchParams.append('', searchKeyword);
+        searchParams.append('s', searchKeyword);
         navigate({
             pathname: 'search',
             search: searchParams.toString()
@@ -60,17 +60,17 @@ function Header() {
                         </Link>
                     </div>
                     <div className="flex items-center w-3/4 justify-end">
-                        <form action="" onSubmit={handleSearchSubmit}>
-                            <label className="relative bg-gray-100 rounded-full w-full">
+                        <form className="w-full" action="" onSubmit={(event)=>handleSearchSubmit(event)}>
+                            <label className="relative bg-gray-100 rounded-full w-full block">
                                 <BiSearch size="22" className="text-gray-400 mr-3 absolute top-1/2 -translate-y-1/2 left-5" />
                                 <input value={searchKeyword}
-                                    onChange={handleSearchInputChange} className="bg-transparent outline-none w-full px-14 py-3" type="text" placeholder="Search products..." />
+                                    onInput={(event)=>handleSearchInputChange(event)} className="bg-transparent outline-none w-full px-14 py-3" type="text" placeholder="Search products..." />
                                 <button className="absolute top-0 bottom-0 bg-primary hover:bg-button-hover duration-150 rounded-full px-9 right-0 text-white">
                                     <BiSearch size="22" />
                                 </button>
                             </label>
                         </form>
-                        <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p>
+                        {/* <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p> */}
                         <ul className="flex items-center">
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
                                 <BsPerson size="26" />
@@ -79,9 +79,8 @@ function Header() {
                                 <BsHeart size="22" />
                                 <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">0</span>
                             </li>
-                            <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
-                                <BsHandbag size="22" />
-                                <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">0</span>
+                            <li className="relative ml-5 hover:text-primary duration-150">
+                                <HeaderCart/>
                             </li>
                         </ul>
                     </div>
@@ -93,11 +92,11 @@ function Header() {
                 </div>
                 <nav className="w-10/12 flex items-center justify-end">
                     <ul className="flex justify-center font-medium w-full">
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Home</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">About</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/shop">Shop</Link></li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Blog</li>
-                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Contact</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/">Trang chủ</Link></li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Về chúng tôi</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5"><Link to="/shop">Cửa hàng</Link></li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Tin tức</li>
+                        <li className="hover:text-primary duration-150 cursor-pointer mx-5">Liên hệ</li>
                     </ul>
                     <div className="flex items-center shrink-0">
                         <div className="p-2 rounded-full bg-gray-200 text-primary">

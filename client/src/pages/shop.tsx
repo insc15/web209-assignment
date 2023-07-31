@@ -2,15 +2,22 @@ import Breadcrumb from "../components/breadcrumb";
 import Container from "../components/layout/container";
 import Section from "../components/layout/section";
 import ListProducts from "../components/listProducts";
-import products from "./db";
 import { FiSliders } from "react-icons/fi";
 import { BsChevronDown } from "react-icons/bs";
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import IProduct from "@/interfaces/product";
+import { getProducts } from "@/services/product";
+import { getAll } from "@/services/category";
+import ICate from "@/interfaces/category";
+import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Range } from "react-range";
+import currencyFormatter from "@/lib/currencyFormatter";
 
 function Sorting({ sortOtps = [], current, setFilter = () => {return;} } : { sortOtps: {label: string, value: string}[], current?: string, setFilter: React.Dispatch<React.SetStateAction<string>>}) {
   return (
-    <Menu as="div" className="relative w-40">
+    <Menu as="div" className="relative w-44">
       <Menu.Button className="inline-flex w-full items-center rounded-full text-sm duration-150 outline-none text-gray-700 justify-end">
         <span className="mr-2">{sortOtps.map((otp)=> {if(otp.value == current) return otp.label})}</span>
         <BsChevronDown />
@@ -72,14 +79,28 @@ function Show({ showOtps = [], current, setFilter = () => {return;} } : { showOt
       );
 }
 
+type FormValues = { [k: string]: string | string[]; }
+
 function PageShop() {
+  const [priceRangeValues, setPriceRangeValues] = useState<number[]>([20, 40]);
+  const [priceRangeConfig, setPriceRangeConfig] = useState<{min: number, max: number}>({min: 0, max: 100})
   const [showFilter, setShowFilter] = useState<string>('20');
   const [sort, setSort] = useState<string>('default');
+  const [products, setProducts] = useState<IProduct[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([])
+  const [categories, setCategories] = useState<ICate[]>([])
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const { register, handleSubmit, watch } = useForm<FormValues>({
+    defaultValues: {
+      categoryId: searchParams.get('categoryId')?.split(',') || '',
+    }
+  });
 
   const sortOtps : {label: string, value: string}[] = [
-    { label: "Default Sorting", value: "default" },
-    { label: "Price: Low to High", value: "low-to-high" },
-    { label: "Price: High to Low", value: "high-to-low" },
+    { label: "Sắp xếp mặc định", value: "default" },
+    { label: "Giá: Thấp đến Cao", value: "low-to-high" },
+    { label: "Giá: Cao xuống Thấp", value: "high-to-low" },
   ]
 
   const showOtps : {label: string, value: string}[] = [
@@ -88,23 +109,148 @@ function PageShop() {
     { label: "40", value: "40" },
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: products } = await getProducts();
+      const { data: categories } = await getAll();
+
+      const min = 0;
+      const max = Math.max(...products.map((product) => product.price)) + 100000;
+      setPriceRangeConfig({min, max});
+      setPriceRangeValues([min, max]);
+
+      setProducts(products);
+      setFilteredProducts(products);
+      setCategories(categories);
+    };
+    void fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: products } = await getProducts(true, searchParams.toString());
+      setProducts(products);
+      setFilteredProducts(products);
+
+      const min = 0;
+      const max = Math.max(...products.map((product) => product.price)) + 100000;
+      setPriceRangeConfig({min, max});
+      setPriceRangeValues([min, max]);
+    };
+    void fetchData();
+  }, [searchParams]);
+
+  useEffect(() => {
+    switch (sort) {
+      case 'low-to-high':
+        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => a.price - b.price));
+        break;
+      case 'high-to-low':
+        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => b.price - a.price));
+        break;
+      default:
+        setFilteredProducts([...products].filter((product) => product.price >= priceRangeValues[0] && product.price <= priceRangeValues[1]).sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
+        break;
+    }
+  },[sort])
+
+  const onSubmit = (data: FormValues) => {
+    const filteredData = Object.fromEntries(Object.entries(data).filter(([_, v]) => v != null && v != '' && v.length > 0));
+    const params = new URLSearchParams();
+    Object.entries(filteredData).forEach(([k, v]) => {
+      params.append(k, v as string);
+    });
+    void navigate(`/shop?${new URLSearchParams(params).toString()}`, { replace: true })
+  }
+
+  const priceFilter = (values: number[]) => {
+      const min = values[0]
+      const max = values[1]
+      switch (sort) {
+        case 'low-to-high':
+          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => a.price - b.price));
+          // setProducts([...products].sort((a, b) => a.price - b.price));
+          break;
+        case 'high-to-low':
+          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => b.price - a.price));
+          // setProducts([...products].sort((a, b) => b.price - a.price));
+          break;
+        default:
+          setFilteredProducts([...products].filter((product) => product.price >= min && product.price <= max).sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
+          // setProducts([...products].sort((a, b) => (a._id! as string).localeCompare(b._id as string)));
+          break;
+      }
+  }
+
+  useEffect(() => {
+    handleSubmit(onSubmit)().catch((err) => console.log(err));
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [watch('categoryId')]);
+
   return (
     <>
-      <Breadcrumb title={"Products"} />
+      <Breadcrumb title={"Cửa hàng"} />
       <Section>
-        <Container>
-          <div className="border-b mb-5 pb-5 flex items-center justify-between">
-            <div className="flex items-center">
-              <FiSliders className="mr-2" />
-              <span className="font-medium">Filter</span>
-            </div>
-            <div className="flex items-center">
-                <Sorting sortOtps={sortOtps} setFilter={setSort} current={sort}/>
-                <span className="mx-2 text-gray-300 font-light">|</span>
-                <Show showOtps={showOtps} current={showFilter} setFilter={setShowFilter}/>
-            </div>
+        <Container className="flex gap-10">
+          <div className="w-3/12">
+            <form className="" onSubmit={(event) => void handleSubmit(onSubmit)(event)}>
+              <div className="shadow-sm border mb-5">
+                <h5 className="text-lg font-medium px-5 py-3 border-b">Danh mục sản phẩm</h5>
+                <ul className="mt-3 px-5 pb-3">
+                  {categories.map((cate, index) => (
+                    <li key={index} className="mb-2">
+                      <label className="cursor-pointer">
+                        <input type="checkbox" value={cate._id} className="mr-2" {...register('categoryId')} />
+                        <span>{cate.name}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="shadow-sm border mb-5">
+                <h5 className="text-lg font-medium px-5 py-3 border-b">Giá</h5>
+                <Range
+                  values={priceRangeValues}
+                  step={1}
+                  min={priceRangeConfig.min}
+                  max={priceRangeConfig.max}
+                  rtl={false}
+                  onFinalChange={(values) => { priceFilter(values) }}
+                  onChange={(values) => { setPriceRangeValues(values); }}
+                  renderTrack={({ props, children }) => (
+                    <div onMouseDown={props.onMouseDown} onTouchStart={props.onTouchStart} className="px-5 py-10">
+                      <div ref={props.ref} className="bg-primary rounded self-center w-full h-[5px]">
+                        {children}
+                      </div>
+                    </div>
+                  )}
+                  renderThumb={({ props, isDragged }) => (
+                    <div {...props} className="h-6 w-6 outline-none rounded-full shadow-[0px_2px_6px_#AAA] bg-white flex justify-center items-center">
+                      <div className={`h-3 w-3 duration-150 rounded-full ${isDragged ? 'bg-primary' : 'bg-gray-300'}`}/>
+                    </div>
+                  )}
+                />
+                <div className="flex items-center justify-between px-5 pb-3">
+                  <input type="text" disabled value={currencyFormatter(priceRangeValues[0])} className="w-1/3 text-center border border-gray-300 rounded-md py-2 outline-none" />
+                  <input type="text" disabled value={currencyFormatter(priceRangeValues[1])} className="w-1/3 text-center border border-gray-300 rounded-md py-2 outline-none" />
+                </div>
+              </div>
+            </form>
           </div>
-          <ListProducts products={products} limit={30} />
+          <div className="w-9/12">
+            <div className="border-b mb-5 pb-5 flex items-center justify-between">
+              <div className="flex items-center">
+                <FiSliders className="mr-2" />
+                <span className="font-medium">Lọc</span>
+              </div>
+              <div className="flex items-center">
+                  <Sorting sortOtps={sortOtps} setFilter={setSort} current={sort}/>
+                  {/* <span className="mx-2 text-gray-300 font-light">|</span>
+                  <Show showOtps={showOtps} current={showFilter} setFilter={setShowFilter}/> */}
+              </div>
+            </div>
+            <ListProducts products={filteredProducts} columns={3} limit={24} />
+          </div>
         </Container>
       </Section>
     </>
