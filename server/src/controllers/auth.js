@@ -32,10 +32,13 @@ export const signup = async (req, res) => {
     const token = jwt.sign({ _id: user._id }, 'banThayDat', {
       expiresIn: '1h',
     });
+    res.cookie('token', token, {
+      httpOnly: true, 
+      maxAge: 3600000, 
+    });
     user.password = undefined;
     return res.status(201).json({
       message: 'User created successfully',
-      accessToken: token,
       user,
     });
   } catch (error) {}
@@ -74,7 +77,10 @@ export const signin = async (req, res) => {
     });
 
     user.password = undefined;
-
+    res.cookie('token', token, {
+      httpOnly: true, 
+      maxAge: 3600000, 
+    });
     return res.status(200).json({
       message: 'Đăng nhập thành công',
       accessToken: token,
