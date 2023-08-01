@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema(
       default: 'member',
       // enum: ["member", "admin"]
     },
+    orders:
+      [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Order'
+        }
+      ]
+
   },
   { timestamps: true, versionKey: false }
 );
