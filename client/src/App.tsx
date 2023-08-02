@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AdminLayout, DefaultLayout } from "./layout";
 import PageHome from "./pages/home";
 import PageShop from "./pages/shop";
-import PageAdminDashboard from "./pages/admin/dashboard";
+import PageAdminDashboard from "./pages/admin/Dashboard";
 import PageAdminProducts from "./pages/admin/product";
 import PageAdminCreateProducts from "./pages/admin/product/create";
 import PageAdminCreateCategories from "./pages/admin/category/create";
@@ -22,7 +22,7 @@ function App() {
         <Route path="/shop" element={<PageShop />} />
         <Route path="/product/:id" element={<PageProduct />} />
         <Route path="/search" element={<PageSearch />} />
-        <Route path="/checkout" element={<PageCheckout/>} />
+        <Route path="/checkout" element={<PageCheckout />} />
         <Route path="*" element={<h1>404</h1>} />
       </Route>
       <Route path="admin" element={<AdminLayout />} >
