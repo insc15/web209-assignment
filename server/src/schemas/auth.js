@@ -11,11 +11,11 @@ export const signupSchema = joi.object({
     'any.required': 'Trường password là bắt buộc',
     'string.min': 'Password phải có ít nhất {#limit} ký tự',
   }),
-  confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
-    'any.only': 'Password không khớp',
-    'string.empty': 'Confirm password không được để trống',
-    'any.required': 'Trường confirm password là bắt buộc',
-  }),
+  // confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
+  //   'any.only': 'Password không khớp',
+  //   'string.empty': 'Confirm password không được để trống',
+  //   'any.required': 'Trường confirm password là bắt buộc',
+  // }),
   // role: joi.string().required().messages({
   //     "string.empty": "Role không được để trống",
   //     "any.required": "Trường role là bắt buộc",

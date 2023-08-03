@@ -5,8 +5,10 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 import { product } from './services/product';
 import { cartSlice } from './slices/cart';
 import { authApi } from './slices/authApi';
+import { authSlice } from './slices/authSlices';
 const store = configureStore({
   reducer: {
+    auth:authSlice.reducer,
     [category.reducerPath]: category.reducer,
     [product.reducerPath]: product.reducer,
     [authApi.reducerPath]: authApi.reducer,
@@ -23,4 +25,5 @@ store.subscribe(() => {
 });
 
 export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch =typeof store.dispatch;
 export default store;

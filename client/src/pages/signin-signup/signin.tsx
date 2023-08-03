@@ -1,35 +1,46 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios, { AxiosError } from 'axios';
 import ApiResponse from '@/interfaces/ApiResponse';
 import { login } from '@/services/account';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useLoginUserMutation } from '@/redux/slices/authApi';
 
-
+const initialState = {
+  email:"",
+  password:"",
+}
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = async () => {
-    try {
-      const response = await login(email, password);
-      const { message, accessToken, user } = response.data as ApiResponse;
-      console.log(message);
-      console.log(accessToken);
-      console.log(user);
-    } catch (error) {
-      const axiosError = error as AxiosError<ApiResponse>;
-      console.error(axiosError.response?.data.message || 'Lỗi không xác định');
+  const [formValue, setFormValue] = useState(initialState);
+  const {email, password} = formValue;
+  const navigate=useNavigate();
+  const [loginUser,
+    {
+      data:loginData,
+      isSuccess:isLoginSuccess,
+      isError:isLoginError,
+      error:loginError
     }
-  };
-  const handleLoginClick = () => {
-    handleLogin()
-      .then(() => {
-        // Handle success (optional)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  
+  ] =useLoginUserMutation();
+
+const handleChange=(e:any) => {
+  setFormValue({...formValue,[e.target.name]:e.target.value});
+}
+const handleLogin =async()=>{
+  if (email&&password) {
+    await loginUser({
+      email,password
+    }) 
+  }else{
+    toast.error("Vui lòng điền vào trường dữ liệu còn thiếu")
+  }
+}
+useEffect(() =>{
+  if (isLoginSuccess) {
+    toast.success("Đăng nhập thành công")
+    navigate("/")
+  }
+},[isLoginSuccess])
 
   return (
     <div className="relative flex min-h-screen text-gray-800 antialiased flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12">
@@ -38,26 +49,28 @@ const Login = () => {
         <div className="mt-4 bg-white shadow-md rounded-lg text-left">
           <div className="h-2 bg-purple-400 rounded-t-md" />
           <div className="px-8 py-6">
-            <label className="block font-semibold">Email</label>
+          <label className="block mt-3 font-semibold">Email</label>
             <input
               type="text"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email" 
+              onChange={handleChange}
               className="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
             />
-            <label className="block mt-3 font-semibold">Mật khẩu</label>
+            <label className="block mt-3 font-semibold">Mật khẩu</label>
             <input
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              onChange={handleChange}
               className="border w-full h-5 px-3 py-5 mt-2 hover:outline-none focus:outline-none focus:ring-indigo-500 focus:ring-1 rounded-md"
             />
             <div className="flex justify-between items-baseline">
               <button
                 type="button"
-                onClick={handleLoginClick}
+                onClick={()=>handleLogin()}
                 className="mt-4 bg-purple-500 text-white py-2 px-6 rounded-md hover:bg-purple-600"
               >
                 Login

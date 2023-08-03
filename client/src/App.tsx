@@ -13,6 +13,7 @@ import PageProduct from "./pages/product";
 import PageSearch from "./pages/search";
 import PageCheckout from "./pages/checkout";
 import Login from "./pages/signin-signup/signin";
+import Signup from "./pages/signin-signup/signup";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path="/search" element={<PageSearch />} />
         <Route path="/checkout" element={<PageCheckout/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Signup/>} />
         <Route path="*" element={<h1>404</h1>} />
       </Route>
       <Route path="admin" element={<AdminLayout />} >
