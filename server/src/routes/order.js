@@ -4,7 +4,7 @@ import { getById, getAll, create, remove, update, paymentIPN } from '../controll
 const router = express.Router();
 
 router.get('/order', getAll);
-router.post('/order/paymentIPN', paymentIPN)
+router.get('/order-received', paymentIPN)
 router.get('/order/:id', getById);
 router.post('/order', create);
 router.patch('/order/:id', update);

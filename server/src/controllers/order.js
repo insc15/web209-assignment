@@ -2,9 +2,9 @@ import joi from "joi";
 import Order from "../models/order";
 import User from "../models/user";
 import cloudinary from "cloudinary";
-import mongoose from "mongoose";
 import OrderProduct from "../models/orderProduct";
 import { createPayment } from "../services/payment";
+import Product from "../models/product";
 
 cloudinary.config({
     cloud_name: 'dpudrx9vt',
@@ -35,7 +35,9 @@ const orderSchema = joi.object({
 
 export const getAll = async (req, res) => {
     try {
+        const userId = req.query.userId;
         const order = await Order.find({
+            userId: userId,
         }).populate("User");
         if (order.length === 0) {
             return res.json({
@@ -51,16 +53,24 @@ export const getAll = async (req, res) => {
 };
 export const getById = async function (req, res) {
     try {
-        // const { data: product } = await axios.get(`${API_URI}/products/${req.params.id}`);
-        const order = await Order.findById(req.params.id).populate(
-            "User"
-        );
+        const order = await Order.findById(req.params.id)
+
         if (!order) {
             return res.json({
                 message: "Không có đơn hàng nào",
             });
         }
-        return res.json(order);
+
+        const orderProduct = await OrderProduct.find({
+            orderId: req.params.id
+        }).populate('productId')
+
+        const resOrder = {
+            ...order._doc,
+            items: orderProduct
+        }
+        
+        return res.json(resOrder);
     } catch (error) {
         return res.status(400).json({
             message: error,
@@ -103,7 +113,7 @@ export const create = async function (req, res) {
         });
 
         if(order.paymentMethod == 'basc') {
-            const { payUrl } = await createPayment(order._id, "test", order.total, `http://localhost:5173/order/${order._id}`, "payWithATM");
+            const { payUrl } = await createPayment(order._id, "test", order.total, `http://localhost:8080/api/order-received`, "payWithATM");
             return res.json({
                 message: "Thêm đơn hàng thành công",
                 payUrl,
@@ -157,13 +167,28 @@ export const remove = async function (req, res) {
 
 export const paymentIPN = async function (req, res) {
     try {
-        console.log(1);
-        const order = await Order.findById(req.body.orderId)
-        if(order){
+        const order = await Order.findById(req.query.orderId)
+
+        if(order && req.query.resultCode == 0 && order.status == 'Pending'){
+            const orderProduct = await OrderProduct.find({
+                orderId: req.query.orderId
+            })
+
+            for (const product of orderProduct) {
+                const productUpdate = await Product.findById(product.productId)
+                productUpdate.stock -= product.quantity
+                await productUpdate.save()
+            }
+
             order.status = "Completed"
-            order.transactionId = req.body.transId
+            order.transactionId = req.query.transId
             await order.save()
-            return res.status(204)
+
+            return res.redirect(`http://localhost:5173/order-received/${order._id}`)
+        }else{
+            return res.json({
+                message: "Thanh toán thành công",
+            });
         }
     } catch (error) {
         return res.status(400)

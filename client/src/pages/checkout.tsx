@@ -9,7 +9,7 @@ import { RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetProductsQuery } from "@/redux/services/product";
 import { Link } from "react-router-dom";
-import { removeCartItem } from "@/redux/slices/cart";
+import { removeAllCartItems, removeCartItem } from "@/redux/slices/cart";
 import currencyFormatter from "@/lib/currencyFormatter";
 import { createOrder } from "@/services/order";
 
@@ -45,6 +45,7 @@ function PageCheckout() {
         void (async () => {
             const res = await createOrder({ ...data, total: cartTotal, items: cart, userId: '64c7f6cc9bc08a5be649b815' })
             if (res && (res.data as {payUrl: string}).payUrl) {
+                dispatch(removeAllCartItems())
                 window.location.href = (res.data as {payUrl: string}).payUrl
             }
         })()
@@ -191,7 +192,7 @@ function PageCheckout() {
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center">
-                                                    <button onClick={() => dispatch(removeCartItem(product._id as string))} className="text-red-500 hover:text-red-600">Xoá</button>
+                                                    <button type="button" onClick={() => dispatch(removeCartItem(product._id as string))} className="text-red-500 hover:text-red-600">Xoá</button>
                                                 </div>
                                             </div>
                                         )

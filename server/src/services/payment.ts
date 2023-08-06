@@ -1,7 +1,7 @@
 import axios from 'axios'
 import crypto from 'crypto'
 
-const config = {
+export const momo_config = {
     'MOMO_ENDPOINT':'https://test-payment.momo.vn/v2/gateway/api/',
     'MOMO_PARTNER_CODE':'MOMOBKUN20180529',
     'MOMO_ACCESS_KEY':'klm05TvNBzhg7h7j',
@@ -10,18 +10,18 @@ const config = {
 }
 
 const instance = axios.create({
-    baseURL: config.MOMO_ENDPOINT,
+    baseURL: momo_config.MOMO_ENDPOINT,
 });
 
 export const createPayment = async (orderID: string, orderInfo: string, amount: number, redirectUrl: string, requestType: 'payWithATM', extraData: string = "") => {
     const signatureData = {
-        accessKey: config.MOMO_ACCESS_KEY,
+        accessKey: momo_config.MOMO_ACCESS_KEY,
         amount,
         extraData,
-        ipnUrl: config.MOMO_IPN_URL,
+        ipnUrl: momo_config.MOMO_IPN_URL,
         orderId: orderID,
         orderInfo,
-        partnerCode: config.MOMO_PARTNER_CODE,
+        partnerCode: momo_config.MOMO_PARTNER_CODE,
         redirectUrl,
         requestId: orderID,
         requestType: requestType,
@@ -31,7 +31,7 @@ export const createPayment = async (orderID: string, orderInfo: string, amount: 
         return `${result}&${key}=${signatureData[key]}`
     }, '').slice(1)
 
-    const signature = crypto.createHmac('sha256', config.MOMO_SECRET).update(signatureDataString).digest('hex')
+    const signature = crypto.createHmac('sha256', momo_config.MOMO_SECRET).update(signatureDataString).digest('hex')
 
     const response = await instance.post('create', {
         ...signatureData,

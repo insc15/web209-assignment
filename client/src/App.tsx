@@ -15,6 +15,7 @@ import PageCheckout from "./pages/checkout";
 import Login from "./pages/signin-signup/signin";
 import Signup from "./pages/signin-signup/signup";
 import PageAccount from "./pages/account";
+import PageOrderReceived from "./pages/orderReceived";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/product/:id" element={<PageProduct />} />
         <Route path="/search" element={<PageSearch />} />
         <Route path="/checkout" element={<PageCheckout />} />
+        <Route path="/order-received/:id" element={<PageOrderReceived />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Signup/>} />
         <Route path="*" element={<h1>404</h1>} />

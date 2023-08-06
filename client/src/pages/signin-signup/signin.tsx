@@ -4,7 +4,7 @@ import ApiResponse from '@/interfaces/ApiResponse';
 import { login } from '@/services/account';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useLoginUserMutation } from '@/redux/slices/authApi';
+import { useLoginUserMutation } from '@/redux/services/authApi';
 
 const initialState = {
   email:"",
