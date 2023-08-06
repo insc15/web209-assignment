@@ -75,7 +75,9 @@ function Header() {
                         {/* <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p> */}
                         <ul className="flex items-center">
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
-                                <BsPerson size="26" />
+                                <Link to="/account">
+                                    <BsPerson size="26" />
+                                </Link> 
                             </li>
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
                                 <BsHeart size="22" />
