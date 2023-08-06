@@ -14,7 +14,10 @@ import PageSearch from "./pages/search";
 import PageCheckout from "./pages/checkout";
 import Login from "./pages/signin-signup/signin";
 import Signup from "./pages/signin-signup/signup";
+import Logout from "./pages/signin-signup/logout";
+import PageAddUser from "./pages/admin/account/addUser";
 import PageAccount from "./pages/account";
+import PageAdminAccount from "./pages/admin/account/AdminAccountDashboard.tsx.tsx";
 import PageOrderReceived from "./pages/orderReceived";
 
 
@@ -30,6 +33,7 @@ function App() {
         <Route path="/order-received/:id" element={<PageOrderReceived />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Signup/>} />
+        <Route path="/logout" element={<Logout/>} />
         <Route path="*" element={<h1>404</h1>} />
       </Route>
       <Route path="admin" element={<AdminLayout />} >
@@ -44,6 +48,15 @@ function App() {
           <Route path="create" element={<PageAdminCreateCategories />} />
           <Route path="update/:id" element={<PageAdminUpdateCategories />} />
         </Route>
+        <Route path="account">
+          <Route index element={<PageAdminAccount />} />
+          <Route path="create" element={<PageAddUser />} />
+          <Route path="update/:id" element={<PageAdminUpdateCategories />} />
+        </Route>
+      </Route>
+      <Route path="account" element={<AccountLayout/>}>
+        <Route index element={<PageAccount/>}></Route>
+        <Route path="login" element={<h1>Login</h1>} />
       </Route>
       <Route path="account" element={<AccountLayout/>}>
         <Route index element={<PageAccount/>}></Route>

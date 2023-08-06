@@ -20,12 +20,13 @@ const Signup = () => {
         const userRegistrationData = {
             name: name,
             email: email,
-            password: password,
+            password: password
           };    
       const response = await register(userRegistrationData);
       const { message, user } = response.data as ApiResponse;
       localStorage.setItem('user', JSON.stringify(user));
       toast.success(message);
+
       navigate("/login")
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -36,7 +37,7 @@ const Signup = () => {
   const handleSignupClick = () => {
     handleSignup()
       .then(() => {
-        // Handle success (optional)
+        //
       })
       .catch((error) => {
         console.log(error);

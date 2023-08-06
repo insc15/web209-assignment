@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios, { AxiosError } from 'axios';
-import ApiResponse from '@/interfaces/ApiResponse';
-import { login } from '@/services/account';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '@/redux/services/authApi';
+
 
 const initialState = {
   email:"",
@@ -30,17 +28,31 @@ const handleLogin =async()=>{
   if (email&&password) {
     await loginUser({
       email,password
-    }) 
+    });
   }else{
     toast.error("Vui lòng điền vào trường dữ liệu còn thiếu")
   }
 }
-useEffect(() =>{
+useEffect(() => {
   if (isLoginSuccess) {
-    toast.success("Đăng nhập thành công")
-    navigate("/")
+    toast.success("Đăng nhập thành công");
+
+    // Lấy giá trị "name" từ response và lưu vào localStorage
+    const userName = loginData?.user?.name;
+    if (userName) {
+      localStorage.setItem('userName', userName);
+    }
+
+    navigate("/");
   }
-},[isLoginSuccess])
+}, [isLoginSuccess, loginData]);
+useEffect(() => {
+  const storedUsername = localStorage.getItem('userName');
+  if (storedUsername) {
+    navigate('/');
+  }
+}, [navigate]);
+
 
   return (
     <div className="relative flex min-h-screen text-gray-800 antialiased flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12">
@@ -75,9 +87,9 @@ useEffect(() =>{
               >
                 Login
               </button>
-              <a href="#" className="text-sm hover:underline">
-                Forgot password?
-              </a>
+              <Link to="/register" className="text-sm hover:underline">
+                Chưa có tài khoản?
+              </Link>
             </div>
           </div>
         </div>

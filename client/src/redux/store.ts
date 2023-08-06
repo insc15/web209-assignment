@@ -7,8 +7,10 @@ import { cartSlice } from './slices/cart';
 import { authApi } from './services/authApi';
 import { authSlice } from './slices/authSlices';
 import { order } from './services/order';
+import userApi from './slices/accountAdmin';
 const store = configureStore({
   reducer: {
+    "account":userApi.reducer,
     auth:authSlice.reducer,
     [category.reducerPath]: category.reducer,
     [product.reducerPath]: product.reducer,
@@ -17,7 +19,7 @@ const store = configureStore({
     cart: cartSlice.reducer
   },
   middleware: (getDefaultMiddleware) => 
-    getDefaultMiddleware().concat(category.middleware, product.middleware,authApi.middleware, order.middleware),
+    getDefaultMiddleware().concat(category.middleware, product.middleware,authApi.middleware, order.middleware,userApi.middleware),
 }); 
 
 setupListeners(store.dispatch);

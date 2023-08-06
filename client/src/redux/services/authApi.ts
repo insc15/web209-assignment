@@ -1,5 +1,3 @@
-import ApiResponse from '@/interfaces/ApiResponse';
-import IUser from '@/interfaces/IUser';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const authApi = createApi({

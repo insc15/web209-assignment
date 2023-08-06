@@ -35,6 +35,11 @@ export function AdminLayout() {
       path: "/admin/categories",
       icon: <BsGrid/>,
     },
+    {
+      name: "Users",
+      path: "/admin/account",
+      icon: <BsGrid/>,
+    },
   ]
 
   return (
