@@ -7,11 +7,13 @@ import logo from "../assets/logo.svg";
 import CategorySelector from "./category.header";
 import { useState, useEffect } from "react";
 import HeaderCart from "./cart.header";
-
+import Logout from "@/pages/signin-signup/logout";
 function Header() {
     const [searchKeyword, setSearchKeyword] = useState<string>('');
     const navigate = useNavigate();
-
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [hideTimeout, setHideTimeout] = useState<number | null>(null);
+    const storedUsername = localStorage.getItem('userName');
     useEffect(() => {
         setSearchKeyword('');
     }, [navigate]);

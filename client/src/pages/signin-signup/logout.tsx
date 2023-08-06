@@ -1,19 +1,19 @@
-import { deleteCookie } from './utils';
-  
-  const Logout = () => {
-    const handleLogout = () => {
-      // Xoá cookie có tên 'token'
-      deleteCookie('token');
-      window.location.href = '/login';
-    };
-  
-    return (
-      <div>
-        <h1>Bạn có chắc chắn muốn đăng xuất?</h1>
-        <button onClick={handleLogout}>Đăng xuất</button>
-      </div>
-    );
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+const Logout = () => {
+  const handleLogout = () => {
+    localStorage.removeItem('userName');
+    toast.success('Đăng xuất thành công');
+    
   };
-  
-  export default Logout;
-  
+
+  return (
+    <button className="text-primary hover:underline" onClick={handleLogout}>
+      Đăng xuất
+    </button>
+  );
+};
+
+export default Logout;

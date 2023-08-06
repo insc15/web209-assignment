@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AdminLayout, DefaultLayout } from "./layout";
+import { AccountLayout, AdminLayout, DefaultLayout } from "./layout";
 import PageHome from "./pages/home";
 import PageShop from "./pages/shop";
 import PageAdminDashboard from "./pages/admin/dashboard";
@@ -14,6 +14,10 @@ import PageSearch from "./pages/search";
 import PageCheckout from "./pages/checkout";
 import Login from "./pages/signin-signup/signin";
 import Signup from "./pages/signin-signup/signup";
+import Logout from "./pages/signin-signup/logout";
+import PageAccount from "./pages/account";
+import PageAdminAccount from "./pages/admin/account/AdminAccountDashboard.tsx";
+import PageAddUser from "./pages/admin/account/addUser";
 
 
 function App() {
@@ -24,9 +28,10 @@ function App() {
         <Route path="/shop" element={<PageShop />} />
         <Route path="/product/:id" element={<PageProduct />} />
         <Route path="/search" element={<PageSearch />} />
-        <Route path="/checkout" element={<PageCheckout/>} />
+        <Route path="/checkout" element={<PageCheckout />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Signup/>} />
+        <Route path="/logout" element={<Logout/>} />
         <Route path="*" element={<h1>404</h1>} />
       </Route>
       <Route path="admin" element={<AdminLayout />} >
@@ -41,6 +46,15 @@ function App() {
           <Route path="create" element={<PageAdminCreateCategories />} />
           <Route path="update/:id" element={<PageAdminUpdateCategories />} />
         </Route>
+        <Route path="account">
+          <Route index element={<PageAdminAccount />} />
+          <Route path="create" element={<PageAddUser />} />
+          <Route path="update/:id" element={<PageAdminUpdateCategories />} />
+        </Route>
+      </Route>
+      <Route path="account" element={<AccountLayout/>}>
+        <Route index element={<PageAccount/>}></Route>
+        <Route path="login" element={<h1>Login</h1>} />
       </Route>
     </Routes>
   </BrowserRouter>

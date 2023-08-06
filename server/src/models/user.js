@@ -10,8 +10,16 @@ const userSchema = new mongoose.Schema(
       default: 'member',
       // enum: ["member", "admin"]
     },
+    orders:
+      [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Order'
+        }
+      ]
+
   },
   { timestamps: true, versionKey: false }
 );
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model('users', userSchema);

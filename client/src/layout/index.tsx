@@ -5,6 +5,8 @@ import logo from "@/assets/logo.svg";
 import { BsGrid, BsList, BsPerson } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineEnvelope } from "react-icons/hi2";
+import Section from "@/components/layout/section";
+import Container from "@/components/layout/container";
 
 export function DefaultLayout() {
   return (
@@ -31,6 +33,11 @@ export function AdminLayout() {
     {
       name: "Categories",
       path: "/admin/categories",
+      icon: <BsGrid/>,
+    },
+    {
+      name: "Users",
+      path: "/admin/account",
       icon: <BsGrid/>,
     },
   ]
@@ -74,4 +81,47 @@ export function AdminLayout() {
       </div>
     </div>
   );
+}
+
+export const AccountLayout = () => {
+  const nav = [
+    {
+      name: "Trang tài khoản",
+      path: "/account",
+    },
+    {
+      name: "Đơn hàng",
+      path: "/account/order",
+    },
+  ]
+
+  return(
+    <>
+      <Header />
+        <Section>
+          <Container>
+            <div className="flex divide-x">
+                <div className="w-1/4 space-y-5">
+                  <div className="flex items-center space-x-5">
+                    <div className="w-20 h-20 bg-gray-300 rounded-full"></div>
+                    <p>Admin <span className="text-gray-400 italic">#1</span></p>
+                  </div>
+                  <ul className="divide-y uppercase font-medium">
+                    {
+                      nav.map((item, index) => (
+                        <li key={index}><NavLink className={({isActive}) => `${isActive ? 'text-gray-700' : 'text-gray-400 hover:text-gray-700'} duration-150 p-2 w-full block`} to={item.path}>{item.name}</NavLink></li>
+                      ))
+                    }
+                    <li className="text-gray-400 hover:text-gray-700 duration-150 p-2 w-full block cursor-pointer">Thoát</li>
+                  </ul>
+                </div>
+                <div className="w-3/4 pl-8">
+                  <Outlet />
+                </div>
+            </div>
+          </Container>
+        </Section>
+      <Footer />
+    </>
+  )
 }
