@@ -74,11 +74,37 @@ function Header() {
                         </form>
                         {/* <p className="mx-8 hover:underline cursor-pointer shrink-0"><BsGeoAlt className="inline" size="20" /> Find a book store</p> */}
                         <ul className="flex items-center">
-                            <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
-                                <Link to="/account">
-                                    <BsPerson size="26" />
-                                </Link> 
-                            </li>
+                        <li
+                            className="relative ml-5 cursor-pointer"
+                            onMouseEnter={() => {
+                                setShowDropdown(true);
+                                clearTimeout(hideTimeout);
+                            }}
+                            onMouseLeave={() => {
+                                const timeout = setTimeout(() => {
+                                setShowDropdown(false);
+                                }, 300); // Đợi 300ms trước khi ẩn dropdown
+                                setHideTimeout(timeout);
+                            }}
+                        >
+                            <Link to='/login'><BsPerson size="26" /></Link>
+                            
+                            {storedUsername &&showDropdown && (
+                                <div
+                                    id="dropdownHover"
+                                    className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-8 right-0"
+                                >
+                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                                    <li>
+                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><Logout /></a>
+                                    </li>
+                                    <li>
+                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{storedUsername}</a>
+                                    </li>
+                                    </ul>
+                                </div>
+                                )}
+                        </li>
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
                                 <BsHeart size="22" />
                                 <span className="absolute top-0 right-0 rounded-full bg-gray-600 text-white p-px text-xs w-4 h-4 text-center translate-x-1/3 -translate-y-1/4 outline-white outline">0</span>
