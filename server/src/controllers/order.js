@@ -4,6 +4,7 @@ import User from "../models/user";
 import cloudinary from "cloudinary";
 import mongoose from "mongoose";
 import OrderProduct from "../models/orderProduct";
+import { createPayment } from "../services/payment";
 
 cloudinary.config({
     cloud_name: 'dpudrx9vt',
@@ -12,7 +13,7 @@ cloudinary.config({
 });
 
 const orderSchema = joi.object({
-    paymentMethod: joi.string().valid('Cash', 'Card').default('Cash'),
+    paymentMethod: joi.string().valid('basc', 'cod').default('cod'),
     transactionId: joi.string(),
     status: joi.string().valid('Pending', 'Shipping', 'Completed', 'Cancelled').default('Pending'),
     userId: joi.string().required(),
@@ -26,9 +27,10 @@ const orderSchema = joi.object({
             quantity: joi.number().required(),
         })
     ),
+    total: joi.number().required(),
     name: joi.string().required(),
     email: joi.string().required(),
-    note: joi.string().required(),
+    note: joi.string().allow(null, ''),
 });
 
 export const getAll = async (req, res) => {
@@ -99,10 +101,20 @@ export const create = async function (req, res) {
                 orders: order._id,
             },
         });
-        return res.json({
-            message: "Thêm đơn hàng thành công",
-            data: order,
-        });
+
+        if(order.paymentMethod == 'basc') {
+            const { payUrl } = await createPayment(order._id, "test", order.total, `http://localhost:5173/order/${order._id}`, "payWithATM");
+            return res.json({
+                message: "Thêm đơn hàng thành công",
+                payUrl,
+                data: order,
+            });
+        }else{
+            return res.json({
+                message: "Thêm đơn hàng thành công",
+                data: order,
+            });
+        }
     } catch (error) {
         return res.status(400).json({
             message: error,
@@ -142,3 +154,18 @@ export const remove = async function (req, res) {
         });
     }
 };
+
+export const paymentIPN = async function (req, res) {
+    try {
+        console.log(1);
+        const order = await Order.findById(req.body.orderId)
+        if(order){
+            order.status = "Completed"
+            order.transactionId = req.body.transId
+            await order.save()
+            return res.status(204)
+        }
+    } catch (error) {
+        return res.status(400)
+    }
+}

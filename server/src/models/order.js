@@ -4,11 +4,15 @@ const order = new mongoose.Schema(
     {
         paymentMethod: {
             type: String,
-            default: 'Cash',
-            enum: ['Cash', 'Card']
+            default: 'cod',
+            enum: ['cod', 'basc']
         },
         transactionId: {
             type: String,
+        },
+        total: {
+            type: Number,
+            require: true,
         },
         status: {
             type: String,
@@ -45,7 +49,6 @@ const order = new mongoose.Schema(
         },
         note: {
             type: String,
-            require: true,
         },
     },
     { timestamps: true, versionKey: false }

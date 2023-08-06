@@ -42,11 +42,11 @@ function PageCheckout() {
     }
 
     const onSubmit: SubmitHandler<FormValues> = (data: FormValues) => {
-        console.log({ ...data, items: cart, userId: '64c7f6cc9bc08a5be649b815' })
         void (async () => {
-            await createOrder({ ...data, items: cart, userId: '64c7f6cc9bc08a5be649b815' }).catch((err) => {
-                console.log(err);
-            })
+            const res = await createOrder({ ...data, total: cartTotal, items: cart, userId: '64c7f6cc9bc08a5be649b815' })
+            if (res && (res.data as {payUrl: string}).payUrl) {
+                window.location.href = (res.data as {payUrl: string}).payUrl
+            }
         })()
     }
 
@@ -70,7 +70,7 @@ function PageCheckout() {
                         {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber.message}</p>}
                         <input type="text" placeholder="Địa chỉ" className={inputClass} {...register('address', { required: 'Vui lòng nhập địa chỉ nhận hàng' })} />
                         {errors.address && <p className="text-red-500 text-sm">{errors.address.message}</p>}
-                        <input type="text" placeholder="Email" className={inputClass} {...register('email', { required: 'Vui lòng nhập Email nhận hàng', pattern: { value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g, message: 'Email không hợp lệ' } })} />
+                        <input type="text" placeholder="Email" className={inputClass} {...register('email', { required: 'Vui lòng nhập Email nhận hàng', pattern: { value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g, message: 'Email không hợp lệ' } })} />
                         {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                         <div className="flex space-x-2">
                             <div className="w-1/2 text-gray-300 hover:text-gray-400 space-y-3">
@@ -160,12 +160,12 @@ function PageCheckout() {
                         <h2 className="font-semibold border-b-2 border-primary pb-3 mb-3 w-fit text-lg">Phương thức thanh toán</h2>
                         <div className="space-y-3 font-semibold">
                             <label className="flex items-center space-x-3 w-fit cursor-pointer">
-                                <input defaultChecked type="radio" {...register('paymentMethod')} defaultValue={'Card'} hidden className="peer" />
+                                <input defaultChecked type="radio" {...register('paymentMethod')} defaultValue={'basc'} hidden className="peer" />
                                 <span className="peer-checked:bg-primary outline outline-1 outline-offset-2 rounded-full w-3 h-3"></span>
                                 <span className="text-sm">Thanh toán qua thẻ ngân hàng</span>
                             </label>
                             <label className="flex items-center space-x-3 w-fit cursor-pointer">
-                                <input type="radio" {...register('paymentMethod')} defaultValue={'Cash'} hidden className="peer" />
+                                <input type="radio" {...register('paymentMethod')} defaultValue={'cod'} hidden className="peer" />
                                 <span className="peer-checked:bg-primary outline outline-1 outline-offset-2 rounded-full w-3 h-3"></span>
                                 <span className="text-sm">Trả tiền mặt khi nhận hàng</span>
                             </label>

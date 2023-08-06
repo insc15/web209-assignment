@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { AdminLayout, DefaultLayout } from "./layout";
+import { AccountLayout, AdminLayout, DefaultLayout } from "./layout";
 import PageHome from "./pages/home";
 import PageShop from "./pages/shop";
-import PageAdminDashboard from "./pages/admin/Dashboard";
+import PageAdminDashboard from "./pages/admin/dashboard";
 import PageAdminProducts from "./pages/admin/product";
 import PageAdminCreateProducts from "./pages/admin/product/create";
 import PageAdminCreateCategories from "./pages/admin/category/create";
@@ -12,6 +12,7 @@ import PageAdminUpdateProducts from "./pages/admin/product/edit";
 import PageProduct from "./pages/product";
 import PageSearch from "./pages/search";
 import PageCheckout from "./pages/checkout";
+import PageAccount from "./pages/account";
 
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
           <Route path="create" element={<PageAdminCreateCategories />} />
           <Route path="update/:id" element={<PageAdminUpdateCategories />} />
         </Route>
+      </Route>
+      <Route path="account" element={<AccountLayout/>}>
+        <Route index element={<PageAccount/>}></Route>
+        <Route path="login" element={<h1>Login</h1>} />
       </Route>
     </Routes>
   </BrowserRouter>
