@@ -22,6 +22,7 @@ type FormValues = {
     district: string
     note: string
     email: string
+    priceTotal: number
 }
 
 function PageCheckout() {
@@ -213,6 +214,7 @@ function PageCheckout() {
                         <div className="bg-primary rounded-b p-5 w-full flex justify-between items-center">
                             <div className="">
                                 <p className="text-white font-sm">Tổng cộng</p>
+                                <input type="number" hidden value={cartTotal + 18000} {...register("priceTotal")} />
                                 <p className="text-white font-semibold mt-1">{currencyFormatter(cartTotal + 18000)}</p>
                             </div>
                             <button type="submit" className="rounded-full px-4 py-3 hover:bg-gray-300 duration-150 bg-white text-primary">Đặt hàng</button>

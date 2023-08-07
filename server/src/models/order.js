@@ -47,6 +47,10 @@ const order = new mongoose.Schema(
             type: String,
             require: true,
         },
+        priceTotal: {
+            type: Number,
+            require: true,
+        },
     },
     { timestamps: true, versionKey: false }
 );

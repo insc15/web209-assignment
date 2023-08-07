@@ -5,6 +5,8 @@ import cloudinary from "cloudinary";
 import mongoose from "mongoose";
 import OrderProduct from "../models/orderProduct";
 
+
+
 cloudinary.config({
     cloud_name: 'dpudrx9vt',
     api_key: '261937952884313',
@@ -29,17 +31,19 @@ const orderSchema = joi.object({
     name: joi.string().required(),
     email: joi.string().required(),
     note: joi.string().required(),
+    priceTotal: joi.number().required(),
 });
 
 export const getAll = async (req, res) => {
     try {
         const order = await Order.find({
-        }).populate("User");
+        }).populate("userId");
         if (order.length === 0) {
             return res.json({
                 message: "Không có đơn hàng nào",
             });
         }
+
         return res.json(order);
     } catch (error) {
         return res.status(400).json({
@@ -51,14 +55,17 @@ export const getById = async function (req, res) {
     try {
         // const { data: product } = await axios.get(`${API_URI}/products/${req.params.id}`);
         const order = await Order.findById(req.params.id).populate(
-            "User"
+            "userId"
         );
+        const orderProduct = await OrderProduct.find({ orderId: order._id }).populate("productId");
         if (!order) {
             return res.json({
                 message: "Không có đơn hàng nào",
             });
         }
-        return res.json(order);
+        const result = { order, products: orderProduct }
+
+        return res.json(result);
     } catch (error) {
         return res.status(400).json({
             message: error,
@@ -116,11 +123,11 @@ export const update = async function (req, res) {
         });
         if (!order) {
             return res.json({
-                message: "Cập nhật đơn hàng không thành công",
+                message: "Cập nhật trạng thái không thành công",
             });
         }
         return res.json({
-            message: "Cập nhật đơn hàng thành công",
+            message: "Cập nhật trạng thái thành công",
             data: order,
         });
     } catch (error) {

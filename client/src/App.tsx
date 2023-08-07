@@ -12,6 +12,9 @@ import PageAdminUpdateProducts from "./pages/admin/product/edit";
 import PageProduct from "./pages/product";
 import PageSearch from "./pages/search";
 import PageCheckout from "./pages/checkout";
+import PageAdminOrder from "./pages/admin/order";
+import PageAdminUpdateOrder from "./pages/admin/order/updateOrder";
+import PageAdminOrderDelail from "./pages/admin/order/detail";
 
 
 function App() {
@@ -36,6 +39,11 @@ function App() {
           <Route index element={<PageAdminCategories />} />
           <Route path="create" element={<PageAdminCreateCategories />} />
           <Route path="update/:id" element={<PageAdminUpdateCategories />} />
+        </Route>
+        <Route path="order">
+          <Route index element={<PageAdminOrder />} />
+          {/* <Route path="update/:id" element={<PageAdminUpdateOrder />} /> */}
+          <Route path="detail/:id" element={<PageAdminOrderDelail />} />
         </Route>
       </Route>
     </Routes>
