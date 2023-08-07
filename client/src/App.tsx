@@ -19,6 +19,7 @@ import PageAccount from "./pages/account";
 import PageAdminAccount from "./pages/admin/account/AdminAccountDashboard.tsx.tsx";
 import PageOrderReceived from "./pages/orderReceived";
 import PageAccountOrder from "./pages/account/order.tsx";
+import PageOrderDetail from "./pages/order.tsx";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route index element={<PageHome />} />
         <Route path="/shop" element={<PageShop />} />
         <Route path="/product/:id" element={<PageProduct />} />
+        <Route path="/order/:id" element={<PageOrderDetail />} />
         <Route path="/search" element={<PageSearch />} />
         <Route path="/checkout" element={<PageCheckout />} />
         <Route path="/order-received/:id" element={<PageOrderReceived />} />

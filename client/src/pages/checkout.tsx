@@ -53,7 +53,7 @@ function PageCheckout() {
                     window.location.href = (res.data as {payUrl: string}).payUrl
                 }else if(res && res.data){
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    navigate('/order-received/' + (res.data.data.id as string))
+                    navigate('/order-received/' + (res.data.data._id as string))
                 }
             })()
         }else{
@@ -215,10 +215,7 @@ function PageCheckout() {
                                     <span className="">Tạm tính</span>
                                     <span className="font-medium">{currencyFormatter(cartTotal)}</span>
                                 </div>
-                                <div className="flex justify-between">
-                                    <span className="">Phí giao hàng</span>
-                                    <span className="font-medium">{currencyFormatter(18000)}</span>
-                                </div>
+                                
                             </div>
                         </div>
                         <div className="bg-primary rounded-b p-5 w-full flex justify-between items-center">

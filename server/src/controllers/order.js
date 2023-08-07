@@ -235,3 +235,27 @@ export const paymentIPN = async function (req, res) {
         return res.status(400)
     }
 }
+
+export const initPay = async function (req, res) {
+    try {
+        const order = await Order.findById(req.query.orderId)
+
+        if(order){
+            if(order.paymentMethod == 'basc') {
+                const { payUrl } = await createPayment(order._id, "test", order.total, `http://localhost:8080/api/order-received`, "payWithATM");
+                return res.json({
+                    message: "Khởi tạo thanh toán thành công",
+                    payUrl,
+                });
+            }else{
+                return res.json({
+                    message: "Phương thức thanh toán không hợp lệ",
+                });
+            }
+        }else{
+            return res.status(400)
+        }
+    } catch (error) {
+        return res.status(400)
+    }
+}

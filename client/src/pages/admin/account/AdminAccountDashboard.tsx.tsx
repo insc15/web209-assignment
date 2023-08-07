@@ -43,9 +43,6 @@ const PageAdminAccount=()=>{
           Username
         </th>
         <th scope="col" className="px-6 py-3">
-          Password
-        </th>
-        <th scope="col" className="px-6 py-3">
           Role
         </th>
         <th></th>
@@ -61,9 +58,6 @@ const PageAdminAccount=()=>{
         </td>
         <td className="px-6 py-4">
             {item.email}
-        </td>
-        <td className="px-6 py-4">
-            {item.password}
         </td>
         <td className="px-6 py-4">
             {item.role}

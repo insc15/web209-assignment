@@ -24,6 +24,7 @@ export function DefaultLayout() {
 }
 
 export function AdminLayout() {
+  const user = useSelector((state: RootState) => state.auth);
   const nav = [
     {
       name: "Dashboard",
@@ -47,7 +48,7 @@ export function AdminLayout() {
     },
   ]
 
-  return (
+  return user && user.role == "admin" ? (
     <div className="flex min-h-screen w-full">
       <div className="w-64 min-h-screen relative shadow-xl">
         <div className="sticky top-0">
@@ -85,7 +86,11 @@ export function AdminLayout() {
         <Outlet></Outlet>
       </div>
     </div>
-  );
+  ) : (
+    <div className="flex min-h-screen w-full">
+      <h1 className="m-auto">Bạn không có quyền truy cập vào trang này</h1>
+    </div>
+  )
 }
 
 export const AccountLayout = () => {
