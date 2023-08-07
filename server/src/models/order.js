@@ -31,7 +31,7 @@ const order = new mongoose.Schema(
             type: String,
             require: true,
         },
-        phoneNumber: {
+        phone: {
             type: String,
             require: true,
         },

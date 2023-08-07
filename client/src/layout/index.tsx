@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import Header from "./header";
 import Footer from "./footer";
 import logo from "@/assets/logo.svg";
@@ -7,6 +7,11 @@ import { FiSearch } from "react-icons/fi";
 import { HiOutlineEnvelope } from "react-icons/hi2";
 import Section from "@/components/layout/section";
 import Container from "@/components/layout/container";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { removeUser } from "@/redux/slices/authSlices";
 
 export function DefaultLayout() {
   return (
@@ -85,17 +90,31 @@ export function AdminLayout() {
 
 export const AccountLayout = () => {
   const nav = [
-    {
-      name: "Trang tài khoản",
-      path: "/account",
-    },
+    // {
+    //   name: "Trang tài khoản",
+    //   path: "/account",
+    // },
     {
       name: "Đơn hàng",
-      path: "/account/order",
+      path: "/account",
     },
   ]
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector((state: RootState) => state.auth)
 
-  return(
+  useEffect(() => {
+    if(!user) {
+      navigate('/login')
+    }
+  }, [user, navigate])
+
+  const handleLogout = () => {
+    dispatch(removeUser());
+    toast.success('Đăng xuất thành công');
+  };
+
+  return user && (
     <>
       <Header />
         <Section>
@@ -104,7 +123,7 @@ export const AccountLayout = () => {
                 <div className="w-1/4 space-y-5">
                   <div className="flex items-center space-x-5">
                     <div className="w-20 h-20 bg-gray-300 rounded-full"></div>
-                    <p>Admin <span className="text-gray-400 italic">#1</span></p>
+                    <p>{user.name}</p>
                   </div>
                   <ul className="divide-y uppercase font-medium">
                     {
@@ -112,7 +131,7 @@ export const AccountLayout = () => {
                         <li key={index}><NavLink className={({isActive}) => `${isActive ? 'text-gray-700' : 'text-gray-400 hover:text-gray-700'} duration-150 p-2 w-full block`} to={item.path}>{item.name}</NavLink></li>
                       ))
                     }
-                    <li className="text-gray-400 hover:text-gray-700 duration-150 p-2 w-full block cursor-pointer">Thoát</li>
+                    <li onClick={()=>handleLogout()} className="text-gray-400 hover:text-gray-700 duration-150 p-2 w-full block cursor-pointer">Thoát</li>
                   </ul>
                 </div>
                 <div className="w-3/4 pl-8">

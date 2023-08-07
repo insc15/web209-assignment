@@ -56,7 +56,7 @@ function PageOrderReceived() {
                         <h2 className="text-2xl font-semibold">Địa chỉ thanh toán</h2>
                         <div className="space-y-2 italic">
                             <p className="font-medium">{orderData.name}</p>
-                            <p className="font-medium">{orderData.phoneNumber}</p>
+                            <p className="font-medium">{orderData.phone}</p>
                             <p className="font-medium">{orderData.address}</p>
                             <p className="font-medium">{district?.name}, {city?.name}</p>
                         </div>
@@ -67,7 +67,7 @@ function PageOrderReceived() {
                             <ul className="list-disc p-5 space-y-2">
                                 <li>Mã đơn hàng: <span className="font-semibold">{orderData._id}</span></li>
                                 <li>Ngày: <span className="font-semibold">{new Date(orderData.createdAt).toLocaleDateString()}</span></li>
-                                <li>Số điện thoại: <span className="font-semibold">{orderData.phoneNumber}</span></li>
+                                <li>Số điện thoại: <span className="font-semibold">{orderData.phone}</span></li>
                                 <li>Tổng cộng: <span className="font-semibold">{currencyFormatter(orderData.total)}</span></li>
                                 <li>Phương thức thanh toán: <span className="font-semibold">{orderData.paymentMethod == "basc" ? 'Thanh toán qua thẻ ngân hàng' : 'Thanh toán khi nhận hàng'}</span></li>
                             </ul>

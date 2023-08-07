@@ -7,13 +7,19 @@ import logo from "../assets/logo.svg";
 import CategorySelector from "./category.header";
 import { useState, useEffect } from "react";
 import HeaderCart from "./cart.header";
-import Logout from "@/pages/signin-signup/logout";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { removeUser } from "@/redux/slices/authSlices";
+
 function Header() {
     const [searchKeyword, setSearchKeyword] = useState<string>('');
     const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
     const [hideTimeout, setHideTimeout] = useState<number | null>(null);
-    const storedUsername = localStorage.getItem('userName');
+    const dispatch = useDispatch();
+    const user = useSelector((state: RootState) => state.auth);
+
     useEffect(() => {
         setSearchKeyword('');
     }, [navigate]);
@@ -32,6 +38,12 @@ function Header() {
             search: searchParams.toString()
         });
     };
+
+    const handleLogout = () => {
+        dispatch(removeUser());
+        toast.success('Đăng xuất thành công');
+      };
+
     return (
         <header className="">
             <div className="bg-[#111214] text-gray-300 text-xs">
@@ -86,24 +98,27 @@ function Header() {
                                 }, 300); // Đợi 300ms trước khi ẩn dropdown
                                 setHideTimeout(timeout);
                             }}
-                        >
-                            <Link to='/login'><BsPerson size="26" /></Link>
-                            
-                            {storedUsername &&showDropdown && (
-                                <div
-                                    id="dropdownHover"
-                                    className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-8 right-0"
-                                >
-                                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><Logout /></a>
-                                    </li>
-                                    <li>
-                                        <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{storedUsername}</a>
-                                    </li>
-                                    </ul>
-                                </div>
-                                )}
+                        >                            
+                            {user && showDropdown ? (
+                                <>
+                                    <p><BsPerson size="26" /></p>
+                                    <div
+                                        id="dropdownHover"
+                                        className="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute top-8 right-0"
+                                    >
+                                        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                                        <li>
+                                            <Link to="/account" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">{user.name}</Link>
+                                        </li>
+                                        <li>
+                                            <button className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white w-full text-left" onClick={()=>handleLogout()}>Đăng xuất</button>
+                                        </li>
+                                        </ul>
+                                    </div>
+                                </>
+                                ):
+                                <Link to='/login'><BsPerson size="26" /></Link>
+                            }
                         </li>
                             <li className="relative ml-5 cursor-pointer hover:text-primary duration-150">
                                 <BsHeart size="22" />

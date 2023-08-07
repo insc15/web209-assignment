@@ -1,4 +1,4 @@
-import { useAddUserMutation, useFetchUserQuery } from "@/redux/slices/accountAdmin"
+import { useAddUserMutation, useFetchUserQuery } from "@/redux/services/account"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 

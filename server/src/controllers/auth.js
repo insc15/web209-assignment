@@ -33,9 +33,11 @@ export const signup = async (req, res) => {
       expiresIn: '1h',
     });
     user.password = undefined;
+
     return res.status(201).json({
       message: 'User created successfully',
       user,
+      accessToken: token
     });
   } catch (error) {}
 };
@@ -62,7 +64,7 @@ export const signin = async (req, res) => {
         message: 'Tài khoản không tồn tại',
       });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({
         message: 'Khong dung mat khau',
@@ -73,9 +75,11 @@ export const signin = async (req, res) => {
     });
 
     user.password = undefined;
+
     return res.status(200).json({
       message: 'Đăng nhập thành công',
       user,
+      accessToken: token,
     });
   } catch (error) {}
 };

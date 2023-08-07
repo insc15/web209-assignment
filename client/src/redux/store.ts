@@ -7,7 +7,7 @@ import { cartSlice } from './slices/cart';
 import { authApi } from './services/authApi';
 import { authSlice } from './slices/authSlices';
 import { order } from './services/order';
-import userApi from './slices/accountAdmin';
+import userApi from './services/account';
 const store = configureStore({
   reducer: {
     "account":userApi.reducer,
@@ -26,6 +26,7 @@ setupListeners(store.dispatch);
 
 store.subscribe(() => {
   localStorage.setItem('cart', JSON.stringify(store.getState().cart));
+  localStorage.setItem('user', JSON.stringify(store.getState().auth));
 });
 
 export type RootState = ReturnType<typeof store.getState>

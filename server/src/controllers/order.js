@@ -20,7 +20,7 @@ const orderSchema = joi.object({
     address: joi.string().required(),
     city: joi.string().required(),
     district: joi.string().required(),
-    phoneNumber: joi.string().required(),
+    phone: joi.string().required(),
     items: joi.array().items(
         joi.object({
             _id: joi.string().required(),
@@ -71,6 +71,48 @@ export const getById = async function (req, res) {
         }
         
         return res.json(resOrder);
+    } catch (error) {
+        return res.status(400).json({
+            message: error,
+        });
+    }
+};
+
+export const getByUserId = async function (req, res) {
+    try {
+        const user = await User.findById(req.params.id)
+        if (!user) {
+            return res.json({
+                message: "Không có đơn hàng nào",
+            });
+        }
+
+        const orders = await Order.find({
+            userId: req.params.id
+        })
+
+        if (!orders) {
+            return res.json({
+                message: "Không có đơn hàng nào",
+            });
+        }
+
+        const newOrders = []
+
+        for (const order of orders) {
+            const orderProduct = await OrderProduct.find({
+                orderId: order._id
+            }).populate('productId')
+
+            const resOrder = {
+                ...order._doc,
+                items: orderProduct
+            }
+
+            newOrders.push(resOrder)
+        }
+
+        return res.json(newOrders);
     } catch (error) {
         return res.status(400).json({
             message: error,
@@ -169,7 +211,7 @@ export const paymentIPN = async function (req, res) {
     try {
         const order = await Order.findById(req.query.orderId)
 
-        if(order && req.query.resultCode == 0 && order.status == 'Pending'){
+        if(order){
             const orderProduct = await OrderProduct.find({
                 orderId: req.query.orderId
             })
@@ -179,16 +221,15 @@ export const paymentIPN = async function (req, res) {
                 productUpdate.stock -= product.quantity
                 await productUpdate.save()
             }
-
-            order.status = "Completed"
-            order.transactionId = req.query.transId
-            await order.save()
+            if( req.query.resultCode == 0 && order.status == 'Pending'){
+                order.status = "Completed"
+                order.transactionId = req.query.transId
+                await order.save()
+            }
 
             return res.redirect(`http://localhost:5173/order-received/${order._id}`)
         }else{
-            return res.json({
-                message: "Thanh toán thành công",
-            });
+            return res.redirect(`http://localhost:5173/order-received/${order._id}`)
         }
     } catch (error) {
         return res.status(400)

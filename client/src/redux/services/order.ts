@@ -12,7 +12,10 @@ export const order = createApi({
     getOrder: builder.query<IOrder, string>({
         query: (id) => `/order/${id}`,
     }),
+    getOrderByUser: builder.query<IOrder[], string>({
+        query: (userId) => `/order/user/${userId}`,
+    }),
   }),
 });
 
-export const { useGetOrdersQuery, useGetOrderQuery } = order;
+export const { useGetOrdersQuery, useGetOrderQuery, useGetOrderByUserQuery } = order;

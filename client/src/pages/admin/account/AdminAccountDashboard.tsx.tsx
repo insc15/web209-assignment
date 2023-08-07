@@ -1,4 +1,4 @@
-import { useFetchUserQuery, useRemoveUserMutation } from "@/redux/slices/accountAdmin";
+import { useFetchUserQuery, useRemoveUserMutation } from "@/redux/services/account";
 import { Link } from "react-router-dom";
 
 const PageAdminAccount=()=>{

@@ -9,10 +9,9 @@ export default interface IOrder {
     userId: string
     address: string
     city: string
-    phoneNumber: string
+    phone: string
     name: string
     district: string
-    email: string
     note: string
     createdAt: string
     updatedAt: string

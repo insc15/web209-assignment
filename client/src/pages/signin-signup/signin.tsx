@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useLoginUserMutation } from '@/redux/services/authApi';
-
+import Cookie from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/redux/slices/authSlices';
 
 const initialState = {
   email:"",
@@ -20,6 +22,7 @@ const Login = () => {
       error:loginError
     }
   ] =useLoginUserMutation();
+  const dispatch = useDispatch();
 
 const handleChange=(e:any) => {
   setFormValue({...formValue,[e.target.name]:e.target.value});
@@ -39,8 +42,10 @@ useEffect(() => {
 
     // Lấy giá trị "name" từ response và lưu vào localStorage
     const userName = loginData?.user?.name;
+    
     if (userName) {
-      localStorage.setItem('userName', userName);
+      dispatch(setUser(loginData?.user));
+      Cookie.set('accessToken', loginData?.accessToken);
     }
 
     navigate("/");
@@ -55,7 +60,7 @@ useEffect(() => {
 
 
   return (
-    <div className="relative flex min-h-screen text-gray-800 antialiased flex-col justify-center overflow-hidden bg-gray-50 py-6 sm:py-12">
+    <div className="relative flex text-gray-800 antialiased flex-col justify-center overflow-hidden bg-gray-50 py-20 sm:py-12">
       <div className="relative py-3 sm:w-96 mx-auto text-center">
         <span className="text-2xl font-light">Đăng nhập tài khoản</span>
         <div className="mt-4 bg-white shadow-md rounded-lg text-left">

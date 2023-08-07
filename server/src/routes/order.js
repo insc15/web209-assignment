@@ -1,11 +1,12 @@
 import express from 'express';
-import { getById, getAll, create, remove, update, paymentIPN } from '../controllers/order';
+import { getById, getAll, create, remove, update, paymentIPN, getByUserId } from '../controllers/order';
 // import { checkPermission } from '../middlewares/checkPermission';
 const router = express.Router();
 
 router.get('/order', getAll);
 router.get('/order-received', paymentIPN)
 router.get('/order/:id', getById);
+router.get('/order/user/:id', getByUserId);
 router.post('/order', create);
 router.patch('/order/:id', update);
 router.delete('/order/:id', remove);
