@@ -15,7 +15,10 @@ import currencyFormatter from "@/lib/currencyFormatter";
 import Table from "@/components/table";
 import { useDialog } from "@/hooks/useDialog";
 import { toast } from "react-toastify";
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 type IProductTable = Omit<IProduct, "image"> & { image: string, categoryId: { name: string } };
 
 function PageAdminProducts() {
@@ -24,10 +27,10 @@ function PageAdminProducts() {
 
   const removeProduct = async (id: string) => {
     const res = await deleteProduct(id);
-    if(res.status === 200) {
+    if (res.status === 200) {
       toast.success("Xóa sản phẩm thành công")
       setProducts(products.filter(product => product._id !== id));
-    }else{
+    } else {
       toast.error("Xóa sản phẩm thất bại")
     }
   }
@@ -66,7 +69,7 @@ function PageAdminProducts() {
       {
         id: "index",
         header: "STT",
-        cell: ({row}) => row.index + 1,
+        cell: ({ row }) => row.index + 1,
       },
       columnHelper.accessor("image", {
         header: "Ảnh",
@@ -74,7 +77,7 @@ function PageAdminProducts() {
       }),
       columnHelper.accessor("name", {
         header: "Tên sản phẩm",
-        cell: ({row, cell}) => <a className="hover:text-primary" target="_blank" href={`/products/${row.original._id as string}`}>{cell.getValue()}</a>,
+        cell: ({ row, cell }) => <a className="hover:text-primary" target="_blank" href={`/products/${row.original._id as string}`}>{cell.getValue()}</a>,
       }),
       columnHelper.accessor("categoryId", {
         header: "Danh mục",
@@ -82,7 +85,7 @@ function PageAdminProducts() {
       }),
       columnHelper.accessor("price", {
         header: "Giá",
-        cell: ({row}) => currencyFormatter(row.original.discount_price || row.original.price),
+        cell: ({ row }) => currencyFormatter(row.original.discount_price || row.original.price),
       }),
       {
         id: "action",
@@ -90,19 +93,19 @@ function PageAdminProducts() {
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <Link className="p-1 border rounded text-gray-700 hover:border-transparent hover:text-white hover:bg-primary cursor-pointer duration-150" to={`/admin/products/${row.original._id as string}/update`}>
-                <BiEdit size="22"/>
+              <BiEdit size="22" />
             </Link>
             <button className="p-1 border rounded text-gray-700 hover:border-transparent hover:text-white hover:bg-red-500 cursor-pointer duration-150"
               onClick={() => {
                 handleRemove(row.original._id as string)
               }}
             >
-              <BiTrash size="22"/>
+              <BiTrash size="22" />
             </button>
           </div>
         ),
       }
-    ] as Array<ColumnDef<IProductTable, unknown>>, [ columnHelper ]
+    ] as Array<ColumnDef<IProductTable, unknown>>, [columnHelper]
   );
 
   return (
@@ -120,7 +123,10 @@ function PageAdminProducts() {
         </Link>
       </div>
       <div className="shadow p-3 bg-white">
-        <Table data={products} columns={columns} />
+        {products.length > 0 ?
+          <Table data={products} columns={columns} />
+          : <div className="flex justify-center items-center p-3 "><Spin indicator={antIcon} /></div>
+        }
       </div>
     </Section>
   );

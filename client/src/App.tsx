@@ -20,6 +20,9 @@ import PageAdminAccount from "./pages/admin/account/AdminAccountDashboard.tsx.ts
 import PageOrderReceived from "./pages/orderReceived";
 import PageAccountOrder from "./pages/account/order.tsx";
 import PageOrderDetail from "./pages/order.tsx";
+import PageAdminOrder from "./pages/admin/order";
+import PageAdminUpdateOrder from "./pages/admin/order/updateOrder";
+import PageAdminOrderDelail from "./pages/admin/order/detail";
 
 
 function App() {
@@ -57,6 +60,11 @@ function App() {
       </Route>
       <Route path="account" element={<AccountLayout/>}>
         <Route index element={<PageAccountOrder/>}></Route>
+        <Route path="order">
+          <Route index element={<PageAdminOrder />} />
+          {/* <Route path="update/:id" element={<PageAdminUpdateOrder />} /> */}
+          <Route path="detail/:id" element={<PageAdminOrderDelail />} />
+        </Route>
       </Route>
     </Routes>
   </BrowserRouter>

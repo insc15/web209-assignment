@@ -29,17 +29,22 @@ export function AdminLayout() {
     {
       name: "Dashboard",
       path: "/admin",
-      icon: <BsGrid/>,
+      icon: <BsGrid />,
     },
     {
       name: "Products",
       path: "/admin/products",
-      icon: <BsGrid/>,
+      icon: <BsGrid />,
     },
     {
       name: "Categories",
       path: "/admin/categories",
-      icon: <BsGrid/>,
+      icon: <BsGrid />,
+    },
+    {
+      name: "Order",
+      path: "/admin/order",
+      icon: <BsGrid />,
     },
     {
       name: "Users",
@@ -54,13 +59,13 @@ export function AdminLayout() {
         <div className="sticky top-0">
           <div className="h-20 p-3">
             <Link to={'/'}>
-              <img className="w-full object-contain h-full" src={logo} alt=""/>
+              <img className="w-full object-contain h-full" src={logo} alt="" />
             </Link>
           </div>
           <div className="p-4 space-y-4">
             {
               nav.map((item, index) => (
-                <NavLink end={item.name == "Dashboard"} key={index} className={({isActive}) => `flex w-full py-2.5 px-5 text-center rounded-md items-center gap-2 duration-150 ${isActive ? 'bg-primary text-white shadow' : 'hover:bg-primary hover:text-white'}`} to={item.path}>
+                <NavLink end={item.name == "Dashboard"} key={index} className={({ isActive }) => `flex w-full py-2.5 px-5 text-center rounded-md items-center gap-2 duration-150 ${isActive ? 'bg-primary text-white shadow' : 'hover:bg-primary hover:text-white'}`} to={item.path}>
                   {item.icon}
                   <span>{item.name}</span>
                 </NavLink>

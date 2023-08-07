@@ -44,6 +44,7 @@ export const getAll = async (req, res) => {
                 message: "Không có đơn hàng nào",
             });
         }
+
         return res.json(order);
     } catch (error) {
         return res.status(400).json({
@@ -180,11 +181,11 @@ export const update = async function (req, res) {
         });
         if (!order) {
             return res.json({
-                message: "Cập nhật đơn hàng không thành công",
+                message: "Cập nhật trạng thái không thành công",
             });
         }
         return res.json({
-            message: "Cập nhật đơn hàng thành công",
+            message: "Cập nhật trạng thái thành công",
             data: order,
         });
     } catch (error) {

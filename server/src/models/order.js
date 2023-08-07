@@ -50,6 +50,10 @@ const order = new mongoose.Schema(
         note: {
             type: String,
         },
+        priceTotal: {
+            type: Number,
+            require: true,
+        },
     },
     { timestamps: true, versionKey: false }
 );
